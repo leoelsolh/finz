@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <h1>HillEnd Boards for Hire</h1>
+    </head>
+    <body>
+        <div>
+            <h4>All Boards</h4>
+            {% for board in boards %}
+                <p>{{ board.name }} - {{ board.size }} - £{{ board.price }}/day</p>
+            {% endfor %}
+        </div>
+        <div>
+            <h4>Booked Boards</h4>
+        </div>
+        <div>
+            <h4>Free Boards</h4>
+        </div>
+    </body>
+</html>
