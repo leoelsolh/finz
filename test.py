@@ -30,14 +30,12 @@ def get_board_by_id(board_id):
         cursor = connection.cursor()
 
         cursor.execute('''SELECT * FROM boards WHERE id = ?''', (board_id,))
-        boards = cursor.fetchall()
-
-        for board in boards:
-            print(board[1])
+        
+        return cursor.fetchone()
 
     except sqlite3.OperationalError as operation_error:
         return f"Error in this operation: {operation_error}"
     
 # main 
 insert_to_db()
-get_board_by_id(1)
+get_board_by_id(5)
