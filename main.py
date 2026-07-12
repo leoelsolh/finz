@@ -19,6 +19,17 @@ try:
                 price INTEGER
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS bookings (
+                id          INTEGER PRIMARY KEY,
+                name        TEXT,
+                phone       TEXT,
+                email       TEXT,
+                wetsuit     INTEGER,
+                hire_date    TEXT,
+                size_requested TEXT
+            )
+        ''')
 except sqlite3.Error as error:
     raise Exception(f"Cant fetch boards: {error}")
 
@@ -48,6 +59,7 @@ def get_all_boards():
     except sqlite3.OperationalError as op_error:
         print(f"Error fetching boards")
 
+
 # Page return logic
 @app.route("/")
 def index():
@@ -66,13 +78,14 @@ def show_board(board_id):
     return render_template("board.html", board=board)
 
 @app.route("/book", methods=["GET", "POST"])
-def board_booking():
+def booking():
     
     if request.method == "POST":
         size = request.form["board_size"]
         return f"<h3>Board size {size} booked.</h3>"
     
-    return render_template("book.html")
+    if request.method == "GET":
+        return render_template("book.html")
 
 @app.route("/hours")
 def hours():
