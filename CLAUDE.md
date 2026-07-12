@@ -2,11 +2,11 @@
 
 ## Scope
 
-You are working on the frontend of this project only. HTML templates, CSS, and static assets.
+You are working on the frontend of this project only. HTML templates, CSS, and static assets. Dont touch the backend AT ALL.
 
 ## Hard rules
 
-Do not modify `main.py`. The routes, the database helpers, and the table setup are hand written and are the author's own learning work. If a template needs data that a route does not currently pass, say so and stop. Do not add the route or change the helper yourself.
+Do not modify `main.py`. The routes, the database helpers, and the table setup are hand written and are the author's own work. If a template needs data that a route does not currently pass, say so and stop. Do not add the route or change the helper yourself.
 
 Do not modify `seed.py`.
 

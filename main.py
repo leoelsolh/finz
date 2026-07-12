@@ -57,8 +57,19 @@ def get_all_boards():
 
         return cursor.fetchall()
     except sqlite3.OperationalError as op_error:
-        print(f"Error fetching boards")
+        print(f"Error fetching boards: {op_error}")
 
+def get_board_sizes():
+    try: 
+        connection = sqlite3.connect("rental.db")
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        cursor.execute('''SELECT DISTINCT size FROM boards''')
+
+        return cursor.fetchall()
+    except sqlite3.OperationalError as op_error:
+        print(f"Error fetching sizes: {op_error}")
 
 # Page return logic
 @app.route("/")
@@ -85,7 +96,8 @@ def booking():
         return f"<h3>Board size {size} booked.</h3>"
     
     if request.method == "GET":
-        return render_template("book.html")
+        sizes = get_board_sizes()
+        return render_template("book.html", sizes=sizes)
 
 @app.route("/hours")
 def hours():
