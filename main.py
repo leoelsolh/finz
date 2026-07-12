@@ -31,7 +31,7 @@ try:
             )
         ''')
 except sqlite3.Error as error:
-    raise Exception(f"Cant fetch boards: {error}")
+    raise Exception(f"\nCant fetch boards:\n{error}\n")
 
 # Site helpers
 def get_board_by_id(board_id):
@@ -45,7 +45,7 @@ def get_board_by_id(board_id):
         return cursor.fetchone() 
 
     except sqlite3.OperationalError as op_error:
-        print(f"Error in this operation: {op_error}")
+        print(f"\nError in this operation:\n{op_error}\n")
 
 def get_all_boards():
     try:
@@ -57,7 +57,7 @@ def get_all_boards():
 
         return cursor.fetchall()
     except sqlite3.OperationalError as op_error:
-        print(f"Error fetching boards: {op_error}")
+        print(f"\nError fetching boards:\n{op_error}\n")
 
 def get_board_sizes():
     try: 
@@ -69,7 +69,19 @@ def get_board_sizes():
 
         return cursor.fetchall()
     except sqlite3.OperationalError as op_error:
-        print(f"Error fetching sizes: {op_error}")
+        print(f"\nError fetching sizes:\n{op_error}\n")
+
+def add_booking(name, phone, email, wetsuit, hire_date, size):
+    try:
+        with sqlite3.connect("rental.db") as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                INSERT INTO bookings (name, phone, email, wetsuit, hire_date, size_requested) VALUES (?, ?, ?, ?, ?, ?)
+            ''', (name, phone, email, wetsuit, hire_date, size))
+
+    except sqlite3.Error as error:
+        print(f"\nError in fetching form values:\n{error}\n")
 
 # Page return logic
 @app.route("/")
@@ -90,11 +102,19 @@ def show_board(board_id):
 
 @app.route("/book", methods=["GET", "POST"])
 def booking():
-    
+
     if request.method == "POST":
-        size = request.form["board_size"]
-        return f"<h3>Board size {size} booked.</h3>"
+        booking_name = request.form["name"]
+        booking_number = request.form["phone"]
+        booking_email = request.form["email"]
+        booking_size = request.form["size_requested"]
+        booking_wetsuit = 1 if request.form.get("wetsuit") else 0 # If wetsuit is unticked, this will prevent an error since an unticked checkbox returns empty instead of false.
+        booking_date = request.form["hire_date"]
     
+        add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
+
+        return f"Your booking has been processed. Thank you."
+        
     if request.method == "GET":
         sizes = get_board_sizes()
         return render_template("book.html", sizes=sizes)
@@ -104,5 +124,5 @@ def hours():
     return "No hours yet"
 
 # main
-if __name__ == "__main__": 
+if __name__ == '__main__': 
     app.run(debug=True)
