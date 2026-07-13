@@ -12,6 +12,6 @@ try:
             ("Max", "9'0", 60),
         ]
         cursor.executemany('''INSERT INTO boards (name, size, price) VALUES (?, ?, ?)''', boards)
-        print("Seeding was successful")
+        
 except sqlite3.Error as error:
     print(f"Seeding failed: {error}")

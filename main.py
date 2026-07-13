@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sqlite3
+import datetime
 from flask import Flask
 from flask import render_template
 from flask import abort
@@ -11,6 +12,8 @@ app = Flask(__name__)
 try:
     with sqlite3.connect("rental.db") as database:
         cursor = database.cursor()
+
+        # tables
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS boards (
                 id    INTEGER PRIMARY KEY,
@@ -30,6 +33,16 @@ try:
                 size_requested TEXT
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS rentals (
+                id          INTEGER PRIMARY KEY,
+                board_id    INTEGER,
+                name_booked TEXT,
+                went_out    TEXT,
+                came_back   TEXT
+            )
+        ''')
+
 except sqlite3.Error as error:
     raise Exception(f"\nCant fetch boards:\n{error}\n")
 
@@ -82,6 +95,32 @@ def add_booking(name, phone, email, wetsuit, hire_date, size):
 
     except sqlite3.Error as error:
         print(f"\nError in fetching form values:\n{error}\n")
+
+def mark_board_out(board_id, renter_name):
+    try:
+        with sqlite3.connect("rental.db") as connection:
+            cursor = connection.cursor()
+            
+            went_out = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute('''
+                INSERT INTO rentals (went_out, board_id, name_booked) VALUES (?, ?, ?)
+            ''', (went_out, board_id, renter_name))
+    
+    except sqlite3.Error as sql_error:
+        print(f"\nSQL error inserting rental time-stamp:\n{sql_error}\n")
+
+def mark_board_in(board_id):
+    try:
+        with sqlite3.connect("rental.db") as connection:
+            cursor = connection.cursor()
+
+            came_back = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute('''
+                UPDATE rentals SET came_back = ? WHERE board_id = ? AND came_back IS NULL
+                ''', (came_back, board_id))
+
+    except sqlite3.Error as sql_error:
+        print(f"\nSQL error closing rental time-stamp:\n{sql_error}\n")
 
 # Page return logic
 @app.route("/")
