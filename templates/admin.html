@@ -6,9 +6,11 @@
         <p>
             <h8>All Boards: </h8>
             {% for rental in rentals %}
-            <div>
                 <p>{{ rental.name }} is out with {{ rental.name_booked }}</p>
-            </div>
+                <form method="post" action="/admin/return">
+                    <input type="hidden" name="board_id" value="{{ rental.board_id }}">
+                    <button type="submit">Mark as Returned</button>
+                </form>
             {% endfor %}
         </p>
     </div>

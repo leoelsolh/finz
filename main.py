@@ -5,6 +5,8 @@ from flask import Flask
 from flask import render_template
 from flask import abort
 from flask import request
+from flask import redirect
+from flask import url_for
 
 app = Flask(__name__)
 
@@ -130,7 +132,7 @@ def get_active_rentals():
         cursor = connection.cursor()
 
         cursor.execute('''
-            SELECT boards.name, boards.size, rentals.name_booked, rentals.went_out
+            SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out
             FROM rentals
             JOIN boards ON rentals.board_id = boards.id
             WHERE came_back IS NULL
@@ -145,6 +147,12 @@ def get_active_rentals():
 def admin():
     rentals = get_active_rentals()
     return render_template("admin.html", rentals=rentals)
+
+@app.route("/admin/return", methods=["POST"])
+def admin_return():
+    marked_board = request.form["board_id"]
+    mark_board_in(marked_board)
+    return redirect(url_for("admin"))
 
 @app.route("/")
 def index():
