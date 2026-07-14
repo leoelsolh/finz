@@ -48,6 +48,7 @@ try:
 except sqlite3.Error as error:
     raise Exception(f"\nCant fetch boards:\n{error}\n")
 
+
 # Site helpers
 def get_board_by_id(board_id):
     try:
@@ -124,6 +125,10 @@ def mark_board_in(board_id):
     except sqlite3.Error as sql_error:
         print(f"\nSQL error closing rental time-stamp:\n{sql_error}\n")
 
+#TODO: Create a site helper that retrives all boards that
+# are rentable, meaning that in the database history,
+# they have been returned. 
+
 # Admin logic
 def get_active_rentals():
     try:
@@ -142,35 +147,48 @@ def get_active_rentals():
     except sqlite3.Error as sql_error:
         print(f"\nSQL error fetching active rentals:\n{sql_error}\n")
 
-# Page return logic
+
+# Admin pages
 @app.route("/admin")
-def admin():
+def admin(): #admin dashboard
     rentals = get_active_rentals()
-    return render_template("admin.html", rentals=rentals)
+    board_stock = get_all_boards()
+    return render_template("admin.html", rentals=rentals, board_stock=board_stock)
 
 @app.route("/admin/return", methods=["POST"])
-def admin_return():
+def admin_return(): #mark a board as retuned
     marked_board = request.form["board_id"]
     mark_board_in(marked_board)
     return redirect(url_for("admin"))
 
+@app.route("/admin/out", methods=["POST"])
+def admin_out(): #mark a board as gone out
+    board_id = request.form["board_id"]
+    renter_name = request.form["renter_name"]
+    mark_board_out(board_id, renter_name)
+    return redirect(url_for("admin"))
+
+
+# Page return logic
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/boards")
-def boards():
-    pass
+def boards(): #disaply all boards
+    board_stock = get_all_boards()
+    #TODO. Here we want to include a helper that hand us rentable boards
+    return render_template("boards.html", board=board_stock)
 
 @app.route("/boards/<int:board_id>")
-def show_board(board_id):
+def show_board(board_id): #view single board by its ID
     board = get_board_by_id(board_id)
     if board is None:
         abort(404)
     return render_template("board.html", board=board)
 
 @app.route("/book", methods=["GET", "POST"])
-def booking():
+def booking(): #book a board
 
     if request.method == "POST":
         booking_name = request.form["name"]

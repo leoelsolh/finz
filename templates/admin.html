@@ -3,8 +3,8 @@
 <head>
 <h1>Admin Panel</h1>
     <div>
+        <h3>All active rentals: </h3>
         <p>
-            <h8>All Boards: </h8>
             {% for rental in rentals %}
                 <p>{{ rental.name }} is out with {{ rental.name_booked }}</p>
                 <form method="post" action="/admin/return">
@@ -16,6 +16,23 @@
     </div>
 </head>
 <body>
-    <div></div>
+    <div>Want to mark a board going out? Chose which board below:</div>
+    <p>
+        <Label>
+            Which board is leaving?
+        </Label>
+    </p>
+    <form method="post" action="/admin/out">
+        <select name="board_id">
+            {% for board in board_stock %}
+                <option value="{{ board.id }}">{{ board.name }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <label>name of renter:</label>
+            <input name="renter_name">
+        </div>
+        <button type="submit">Mark Out</button>
+    </form>
 </body>
 </html>
