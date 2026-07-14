@@ -3,4 +3,4 @@ rm rental.db
 python3 main.py
 python3 seed.py
 
-echo("Seeding complete")
+echo "Seeding complete"

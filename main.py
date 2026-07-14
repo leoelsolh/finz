@@ -122,15 +122,37 @@ def mark_board_in(board_id):
     except sqlite3.Error as sql_error:
         print(f"\nSQL error closing rental time-stamp:\n{sql_error}\n")
 
+# Admin logic
+def get_active_rentals():
+    try:
+        connection = sqlite3.connect("rental.db")
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        cursor.execute('''
+            SELECT boards.name, boards.size, rentals.name_booked, rentals.went_out
+            FROM rentals
+            JOIN boards ON rentals.board_id = boards.id
+            WHERE came_back IS NULL
+        ''')
+        
+        return cursor.fetchall()
+    except sqlite3.Error as sql_error:
+        print(f"\nSQL error fetching active rentals:\n{sql_error}\n")
+
 # Page return logic
+@app.route("/admin")
+def admin():
+    rentals = get_active_rentals()
+    return render_template("admin.html", rentals=rentals)
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/boards")
 def boards():
-    all_boards = get_all_boards()
-    return render_template("boards.html", boards=all_boards) 
+    pass
 
 @app.route("/boards/<int:board_id>")
 def show_board(board_id):
