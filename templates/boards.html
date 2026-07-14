@@ -6,12 +6,9 @@
     <body>
         <div>
             <h4>All Boards</h4>
-            {% for board in boards %}
+            {% for board in board_stock %}
                 <p>{{ board.name }} - {{ board.size }} - £{{ board.price }}/day</p>
             {% endfor %}
-        </div>
-        <div>
-            <h4>Booked Boards</h4>
         </div>
         <div>
             <h4>Free Boards</h4>
