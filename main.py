@@ -9,9 +9,12 @@ from flask import abort
 from flask import request
 from flask import redirect
 from flask import url_for
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 schema.init_db()
+ADMIN_PASSWORD = 'scrypt:32768:8:1$dBEH8eoUHWihIEn3$d8d75b49e2d73a5049f03cd38494d2f93eac64e9470cf170f40d8f255de1c585da7eae2d11b44d2adf781fa64a17e01896caf3f70e6363a10142fcf74cbdbbc6'
 
 
 # Site helpers
@@ -151,6 +154,20 @@ def admin(): #admin dashboard
 
     return render_template("admin.html", rentals=rentals, board_stock=board_stock, bookings=bookings)
 
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+        #username = request.form["username"]
+        password = request.form["password"]
+
+        if check_password_hash(ADMIN_PASSWORD, password):
+            print("\nmatch\n")
+            return "Logged in"
+        return "wrong password"
+
+    return render_template("login.html")
+
 @app.route("/admin/return", methods=["POST"])
 def admin_return(): #mark a board as retuned
     marked_board = request.form["board_id"]
@@ -205,7 +222,7 @@ def booking(): #book a board
 
 @app.route("/hours")
 def hours():
-    return "No hours yet"
+    return render_template("hours.html")
 
 # main
 if __name__ == '__main__': 
