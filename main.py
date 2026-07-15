@@ -134,7 +134,9 @@ def get_available_boards():
         cursor.execute('''
             SELECT * FROM boards
             WHERE id NOT IN (
-                SELECT board_id FROM rentals WHERE came_back IS NULL
+                SELECT board_id FROM rentals 
+                WHERE came_back IS NULL
+                AND date(went_out) = date('now')
             )
         ''')
         return cursor.fetchall()
@@ -206,8 +208,9 @@ def index():
 @app.route("/boards")
 def boards(): #disaply all boards
     board_stock = get_all_boards()
+    available_boards = get_available_boards()
     #TODO. Here we want to include a helper that hand us rentable boards
-    return render_template("boards.html", board_stock=board_stock)
+    return render_template("boards.html", board_stock=board_stock, available_boards=available_boards)
 
 @app.route("/boards/<int:board_id>")
 def show_board(board_id): #view single board by its ID

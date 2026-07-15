@@ -13,7 +13,7 @@ Opening hours are 9am to 6pm. Hire is flat rate per day. Prices are provisional:
 
 Built with Flask and sqlite3 on the Python standard library. No ORM, no framework beyond Flask itself. The frontend is plain CSS, mobile first, on the assumption that both customers and staff will mostly be on phones.
 
-#### V1
+#### V1.0
 
 V1 is the smallest thing that solves the two stated problems. It is done when a customer can browse the boards and submit a booking that lands in the database, and the shop can log in, see the day's bookings, mark a board out, and mark it back in.
 
