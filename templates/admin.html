@@ -3,7 +3,7 @@
 <head>
 <h1>Admin Panel</h1>
     <div>
-        <h3>All active rentals: </h3>
+        <h2>All active rentals: </h2>
         <p>
             {% for rental in rentals %}
                 <p>{{ rental.name }} is out with {{ rental.name_booked }}</p>
@@ -14,9 +14,21 @@
             {% endfor %}
         </p>
     </div>
+    <div>
+        <h2>Todays Bookings:</h2>
+        <p>
+            {% for booking in bookings %}
+                <p>{{ booking.name }} booked {{ booking.size_requested }}</p>
+                <p>{{ "wetsuit included" if booking.wetsuit else "no wetsuit" }}</p>
+            {% else %}<p>No bookings today</p>{% endfor %}
+        </p>
+    </div>
 </head>
 <body>
-    <div>Want to mark a board going out? Chose which board below:</div>
+    <h2>Mark In / Out</h2>
+    <div>
+        Want to mark a board going out? Chose which board below:
+    </div>
     <p>
         <Label>
             Which board is leaving?

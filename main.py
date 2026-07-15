@@ -147,13 +147,27 @@ def get_active_rentals():
     except sqlite3.Error as sql_error:
         print(f"\nSQL error fetching active rentals:\n{sql_error}\n")
 
+def get_todays_bookings():
+    try:
+        connection = sqlite3.connect("rental.db")
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        cursor.execute('''SELECT * FROM bookings WHERE hire_date = ?''', (today,))
+
+        return cursor.fetchall()
+    except sqlite3.Error as sql_error:
+        print(f"\nSQLite Error when fetching todays bookings:\n{sql_error}\n")
 
 # Admin pages
 @app.route("/admin")
 def admin(): #admin dashboard
     rentals = get_active_rentals()
     board_stock = get_all_boards()
-    return render_template("admin.html", rentals=rentals, board_stock=board_stock)
+    bookings = get_todays_bookings()
+
+    return render_template("admin.html", rentals=rentals, board_stock=board_stock, bookings=bookings)
 
 @app.route("/admin/return", methods=["POST"])
 def admin_return(): #mark a board as retuned
@@ -178,7 +192,7 @@ def index():
 def boards(): #disaply all boards
     board_stock = get_all_boards()
     #TODO. Here we want to include a helper that hand us rentable boards
-    return render_template("boards.html", board=board_stock)
+    return render_template("boards.html", board_stock=board_stock)
 
 @app.route("/boards/<int:board_id>")
 def show_board(board_id): #view single board by its ID
