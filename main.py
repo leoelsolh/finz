@@ -125,9 +125,23 @@ def mark_board_in(board_id):
     except sqlite3.Error as sql_error:
         print(f"\nSQL error closing rental time-stamp:\n{sql_error}\n")
 
-#TODO: Create a site helper that retrives all boards that
-# are rentable, meaning that in the database history,
-# they have been returned. 
+def get_available_boards():
+    try:
+        connection = sqlite3.connect("rental.db")
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        cursor.execute('''
+            SELECT * FROM boards
+            WHERE id NOT IN (
+                SELECT board_id FROM rentals WHERE came_back IS NULL
+            )
+        ''')
+        return cursor.fetchall()
+
+    except sqlite3.Error as sql_error:
+        print(f"\nSQLite error when fetching available boards:\n{sql_error}\n")
+
 
 # Admin logic
 def get_active_rentals():
@@ -160,11 +174,12 @@ def get_todays_bookings():
     except sqlite3.Error as sql_error:
         print(f"\nSQLite Error when fetching todays bookings:\n{sql_error}\n")
 
+
 # Admin pages
 @app.route("/admin")
 def admin(): #admin dashboard
     rentals = get_active_rentals()
-    board_stock = get_all_boards()
+    board_stock = get_available_boards()
     bookings = get_todays_bookings()
 
     return render_template("admin.html", rentals=rentals, board_stock=board_stock, bookings=bookings)
