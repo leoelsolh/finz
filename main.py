@@ -153,11 +153,18 @@ def get_todays_bookings():
 
 
 # Admin pages
+@app.before_request
+def check_auth_session(): #Preproccessing
+    
+    if request.path.startswith("/admin"):
+        if request.path == '/admin/login':
+            return 
+
+        if not session.get("name"):
+            return redirect(url_for("admin_login"))
+
 @app.route("/admin")
 def admin(): #admin dashboard
-    if not session.get("name"):
-        return redirect(url_for("admin_login"))
-    
     rentals = get_active_rentals()
     board_stock = get_available_boards()
     bookings = get_todays_bookings()
@@ -184,20 +191,12 @@ def admin_login():
 
 @app.route("/admin/return", methods=["POST"])
 def admin_return(): #mark a board as retuned
-
-    if not session.get("name"):
-        return redirect(url_for("admin_login"))
-
     marked_board = request.form["board_id"]
     mark_board_in(marked_board)
     return redirect(url_for("admin"))
 
 @app.route("/admin/out", methods=["POST"])
 def admin_out(): #mark a board as gone out
-
-    if not session.get("name"):
-        return redirect(url_for("admin_login"))
-
     board_id = request.form["board_id"]
     renter_name = request.form["renter_name"]
     mark_board_out(board_id, renter_name)
