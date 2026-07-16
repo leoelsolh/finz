@@ -171,10 +171,10 @@ def admin_login():
         username = request.form["username"]
         password = request.form["password"]
         
-        if username == admin_user:
+        if username == admin_user: #TODO: Currently this could disclose the username due to longer response times upon correct username. 
             if check_password_hash(admin_hash, password):
                 print("\nmatch\n")
-                
+
                 session["name"] = username
                 return redirect(url_for("admin"))
 
@@ -184,12 +184,20 @@ def admin_login():
 
 @app.route("/admin/return", methods=["POST"])
 def admin_return(): #mark a board as retuned
+
+    if not session.get("name"):
+        return redirect(url_for("admin_login"))
+
     marked_board = request.form["board_id"]
     mark_board_in(marked_board)
     return redirect(url_for("admin"))
 
 @app.route("/admin/out", methods=["POST"])
 def admin_out(): #mark a board as gone out
+
+    if not session.get("name"):
+        return redirect(url_for("admin_login"))
+
     board_id = request.form["board_id"]
     renter_name = request.form["renter_name"]
     mark_board_out(board_id, renter_name)
