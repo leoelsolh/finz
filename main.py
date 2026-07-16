@@ -9,16 +9,19 @@ from flask import render_template
 from flask import abort
 from flask import request
 from flask import redirect
+from flask import session
 from flask import url_for
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
-load_dotenv()
+load_dotenv() #Load .env file
 
-admin_hash = os.environ["ADMIN_HASH"]
-
-schema.init_db()
+app.config["SESSION_PERMANENT"] = False
+app.secret_key = os.environ["SECRET_KEY"] #Load signing key
+admin_hash = os.environ["ADMIN_HASH"] #Load admin hash
+admin_user = os.environ["ADMIN_USER"] #Load admin user
+schema.init_db() #Init database tables
 
 
 # Site helpers
@@ -152,6 +155,9 @@ def get_todays_bookings():
 # Admin pages
 @app.route("/admin")
 def admin(): #admin dashboard
+    if not session.get("name"):
+        return redirect(url_for("admin_login"))
+    
     rentals = get_active_rentals()
     board_stock = get_available_boards()
     bookings = get_todays_bookings()
@@ -162,13 +168,17 @@ def admin(): #admin dashboard
 def admin_login():
 
     if request.method == "POST":
-        #username = request.form["username"]
+        username = request.form["username"]
         password = request.form["password"]
+        
+        if username == admin_user:
+            if check_password_hash(admin_hash, password):
+                print("\nmatch\n")
+                
+                session["name"] = username
+                return redirect(url_for("admin"))
 
-        if check_password_hash(admin_hash, password):
-            print("\nmatch\n")
-            return "Logged in"
-        return "wrong password"
+        return "wrong username or password"
 
     return render_template("login.html")
 
@@ -194,7 +204,7 @@ def index():
 @app.route("/boards")
 def boards(): #disaply all boards
     board_stock = get_all_boards()
-    return render_template("boards.html", board_stock=board_stock, available_boards=available_boards)
+    return render_template("boards.html", board_stock=board_stock)
 
 @app.route("/boards/<int:board_id>")
 def show_board(board_id): #view single board by its ID
