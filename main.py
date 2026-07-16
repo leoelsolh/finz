@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import os
 import sqlite3
 import datetime
 import schema
@@ -10,12 +11,15 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from dotenv import load_dotenv
-from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
-schema.init_db()
 load_dotenv()
+
+admin_hash = os.environ["ADMIN_HASH"]
+
+schema.init_db()
+
 
 # Site helpers
 def get_board_by_id(board_id):
@@ -161,7 +165,7 @@ def admin_login():
         #username = request.form["username"]
         password = request.form["password"]
 
-        if check_password_hash(ADMIN_PASSWORD, password):
+        if check_password_hash(admin_hash, password):
             print("\nmatch\n")
             return "Logged in"
         return "wrong password"
@@ -190,8 +194,6 @@ def index():
 @app.route("/boards")
 def boards(): #disaply all boards
     board_stock = get_all_boards()
-    available_boards = get_available_boards()
-    #TODO. Here we want to include a helper that hand us rentable boards
     return render_template("boards.html", board_stock=board_stock, available_boards=available_boards)
 
 @app.route("/boards/<int:board_id>")
