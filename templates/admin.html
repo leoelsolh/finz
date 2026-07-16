@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+</head>
+<body>
 <h1>Admin Panel</h1>
     <div>
         <h2>All active rentals: </h2>
@@ -23,8 +25,6 @@
             {% else %}<p>No bookings today</p>{% endfor %}
         </p>
     </div>
-</head>
-<body>
     <h2>Mark In / Out</h2>
     <div>
         Want to mark a board going out? Chose which board below:
@@ -45,6 +45,9 @@
             <input name="renter_name">
         </div>
         <button type="submit">Mark Out</button>
+    </form>
+    <form method="post" action="/admin/logout">
+        <button type="submit">Log Out</button>
     </form>
 </body>
 </html>

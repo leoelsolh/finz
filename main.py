@@ -186,8 +186,12 @@ def admin_login():
                 return redirect(url_for("admin"))
 
         return "wrong username or password"
-
     return render_template("login.html")
+
+@app.route("/admin/logout", methods=["POST"])
+def admin_logout():
+    session.clear()
+    return redirect(url_for("admin"))
 
 @app.route("/admin/return", methods=["POST"])
 def admin_return(): #mark a board as retuned
