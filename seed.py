@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # Seed Script
 import sqlite3
+import schema
+schema.init_db()
 
 try:
     with sqlite3.connect("rental.db") as database:

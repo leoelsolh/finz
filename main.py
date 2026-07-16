@@ -9,13 +9,13 @@ from flask import abort
 from flask import request
 from flask import redirect
 from flask import url_for
+from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 schema.init_db()
-ADMIN_PASSWORD = 'scrypt:32768:8:1$dBEH8eoUHWihIEn3$d8d75b49e2d73a5049f03cd38494d2f93eac64e9470cf170f40d8f255de1c585da7eae2d11b44d2adf781fa64a17e01896caf3f70e6363a10142fcf74cbdbbc6'
-
+load_dotenv()
 
 # Site helpers
 def get_board_by_id(board_id):
