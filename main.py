@@ -2,6 +2,8 @@
 import os
 import sqlite3
 import datetime
+import contextlib
+
 import schema
 
 from flask import Flask
@@ -23,98 +25,117 @@ admin_hash = os.environ["ADMIN_HASH"] #Load admin hash
 admin_user = os.environ["ADMIN_USER"] #Load admin user
 schema.init_db() #Init database tables
 
+# Site logic
+@contextlib.contextmanager
+def get_connection():
+    connection = sqlite3.connect("rental.db")
+    connection.row_factory = sqlite3.Row
+    try:
+        yield connection
+    finally:
+        connection.close()
+
+@app.before_request
+def check_auth_session(): #Preproccessing
+    if request.path.startswith("/admin"):
+        if request.path == '/admin/login':
+            return 
+
+        if not session.get("name"):
+            return redirect(url_for("admin_login"))
+
 
 # Site helpers
 def get_board_by_id(board_id):
     try:
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        cursor.execute('''SELECT * FROM boards WHERE id = ?''', (board_id,))
-        
-        return cursor.fetchone() 
+            cursor.execute('''SELECT * FROM boards WHERE id = ?''', (board_id,))
+            return cursor.fetchone() 
 
     except sqlite3.OperationalError as op_error:
         print(f"\nError in this operation:\n{op_error}\n")
 
 def get_all_boards():
     try:
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        cursor.execute('''SELECT * FROM boards''')
+            cursor.execute('''SELECT * FROM boards''')
+            return cursor.fetchall()
 
-        return cursor.fetchall()
     except sqlite3.OperationalError as op_error:
         print(f"\nError fetching boards:\n{op_error}\n")
 
 def get_board_sizes():
     try: 
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        cursor.execute('''SELECT DISTINCT size FROM boards''')
+            cursor.execute('''SELECT DISTINCT size FROM boards''')
+            return cursor.fetchall()
 
-        return cursor.fetchall()
     except sqlite3.OperationalError as op_error:
         print(f"\nError fetching sizes:\n{op_error}\n")
 
 def add_booking(name, phone, email, wetsuit, hire_date, size):
     try:
-        with sqlite3.connect("rental.db") as connection:
+        with get_connection() as connection:
             cursor = connection.cursor()
 
             cursor.execute('''
                 INSERT INTO bookings (name, phone, email, wetsuit, hire_date, size_requested) VALUES (?, ?, ?, ?, ?, ?)
             ''', (name, phone, email, wetsuit, hire_date, size))
 
+            connection.commit()
+
     except sqlite3.Error as error:
         print(f"\nError in fetching form values:\n{error}\n")
 
 def mark_board_out(board_id, renter_name):
     try:
-        with sqlite3.connect("rental.db") as connection:
+        with get_connection() as connection:
             cursor = connection.cursor()
             
             went_out = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute('''
                 INSERT INTO rentals (went_out, board_id, name_booked) VALUES (?, ?, ?)
             ''', (went_out, board_id, renter_name))
+            
+            connection.commit()
     
     except sqlite3.Error as sql_error:
         print(f"\nSQL error inserting rental time-stamp:\n{sql_error}\n")
 
 def mark_board_in(board_id):
     try:
-        with sqlite3.connect("rental.db") as connection:
+        with get_connection() as connection:
             cursor = connection.cursor()
 
             came_back = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute('''
                 UPDATE rentals SET came_back = ? WHERE board_id = ? AND came_back IS NULL
                 ''', (came_back, board_id))
+            connection.commit()
 
     except sqlite3.Error as sql_error:
         print(f"\nSQL error closing rental time-stamp:\n{sql_error}\n")
 
 def get_available_boards():
     try:
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        cursor.execute('''
-            SELECT * FROM boards
-            WHERE id NOT IN (
-                SELECT board_id FROM rentals 
-                WHERE came_back IS NULL
-                AND date(went_out) = date('now')
-            )
-        ''')
-        return cursor.fetchall()
+            cursor.execute('''
+                SELECT * FROM boards
+                WHERE id NOT IN (
+                    SELECT board_id FROM rentals 
+                    WHERE came_back IS NULL
+                    AND date(went_out) = date('now')
+                )
+            ''')
+            return cursor.fetchall()
 
     except sqlite3.Error as sql_error:
         print(f"\nSQLite error when fetching available boards:\n{sql_error}\n")
@@ -123,46 +144,34 @@ def get_available_boards():
 # Admin logic
 def get_active_rentals():
     try:
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        cursor.execute('''
-            SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out
-            FROM rentals
-            JOIN boards ON rentals.board_id = boards.id
-            WHERE came_back IS NULL
-        ''')
-        
-        return cursor.fetchall()
+            cursor.execute('''
+                SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out
+                FROM rentals
+                JOIN boards ON rentals.board_id = boards.id
+                WHERE came_back IS NULL
+            ''')
+            return cursor.fetchall()
+
     except sqlite3.Error as sql_error:
         print(f"\nSQL error fetching active rentals:\n{sql_error}\n")
 
 def get_todays_bookings():
     try:
-        connection = sqlite3.connect("rental.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        with get_connection() as connection:
+            cursor = connection.cursor()
 
-        today = datetime.datetime.now().strftime("%Y-%m-%d")
-        cursor.execute('''SELECT * FROM bookings WHERE hire_date = ?''', (today,))
+            today = datetime.datetime.now().strftime("%Y-%m-%d")
+            cursor.execute('''SELECT * FROM bookings WHERE hire_date = ?''', (today,))
+            return cursor.fetchall()
 
-        return cursor.fetchall()
     except sqlite3.Error as sql_error:
         print(f"\nSQLite Error when fetching todays bookings:\n{sql_error}\n")
 
 
 # Admin pages
-@app.before_request
-def check_auth_session(): #Preproccessing
-    
-    if request.path.startswith("/admin"):
-        if request.path == '/admin/login':
-            return 
-
-        if not session.get("name"):
-            return redirect(url_for("admin_login"))
-
 @app.route("/admin")
 def admin(): #admin dashboard
     rentals = get_active_rentals()
@@ -226,8 +235,8 @@ def show_board(board_id): #view single board by its ID
 
 @app.route("/book", methods=["GET", "POST"])
 def booking(): #book a board
-
     if request.method == "POST":
+
         booking_name = request.form["name"]
         booking_number = request.form["phone"]
         booking_email = request.form["email"]
