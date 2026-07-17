@@ -1,0 +1,251 @@
+/* Hillend Surf Hire, shared styles. Sandy base, sea blue for headings and labels, coral for actions only. */
+
+:root {
+	--sand: #F8F3E9;
+	--card: #FFFDF7;
+	--line: #E7DCC7;
+	--line-strong: #D9CEB7;
+	--ink: #24373F;
+	--ink-soft: #64757C;
+	--sea: #3D7A8C;
+	--sea-deep: #2E6272;
+	--foam: #E4EEF0;
+	--coral: #E4705C;
+	--coral-deep: #C85843;
+	--radius: 14px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--sand);
+	color: var(--ink);
+	font-family: "Seravek", "Avenir Next", "Trebuchet MS", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+.topbar,
+.day-summary,
+main {
+	width: 100%;
+	max-width: 30rem;
+	margin-inline: auto;
+	padding-inline: 1.25rem;
+}
+
+main {
+	padding-bottom: 3.5rem;
+}
+
+/* Header with the wave rule, the one decorative flourish */
+.topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-top: 1.4rem;
+	padding-bottom: 1.2rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 4 Q5 0.5 10 4 T20 4 T30 4 T40 4' fill='none' stroke='%233D7A8C' stroke-width='1.5' stroke-linecap='round' opacity='0.45'/%3E%3C/svg%3E");
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	background-size: 40px 8px;
+}
+
+h1 {
+	margin: 0;
+	font-size: 1.7rem;
+	letter-spacing: -0.01em;
+}
+
+.eyebrow {
+	margin: 0 0 0.15rem;
+	font-size: 0.72rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sea);
+}
+
+/* Glanceable one-line summary of the day */
+.day-summary {
+	margin: 0.9rem auto 0;
+	font-size: 0.95rem;
+	color: var(--ink-soft);
+}
+
+.day-summary strong {
+	color: var(--ink);
+	font-size: 1.05rem;
+}
+
+/* Zones */
+.zone {
+	margin-top: 1.9rem;
+}
+
+.zone h2 {
+	margin: 0 0 0.6rem;
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sea-deep);
+}
+
+/* Cards */
+.card {
+	background: var(--card);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	padding: 1rem 1rem 1.1rem;
+	margin-bottom: 0.8rem;
+	box-shadow: 0 1px 2px rgba(36, 55, 63, 0.05);
+}
+
+.card-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.6rem;
+}
+
+.card h3 {
+	margin: 0;
+	font-size: 1.25rem;
+}
+
+.card .size {
+	font-weight: 500;
+	font-size: 1rem;
+	color: var(--ink-soft);
+}
+
+.card p {
+	margin: 0.35rem 0 0.9rem;
+	color: var(--ink-soft);
+}
+
+.card a {
+	color: var(--sea-deep);
+}
+
+/* State chips, never coral: coral is for actions only */
+.chip {
+	flex-shrink: 0;
+	display: inline-block;
+	padding: 0.2rem 0.7rem;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.chip-out {
+	background: var(--ink);
+	color: var(--sand);
+}
+
+.chip-sea {
+	background: var(--foam);
+	color: var(--sea-deep);
+}
+
+/* Buttons, thumb sized */
+.btn {
+	display: block;
+	width: 100%;
+	min-height: 3.25rem;
+	padding: 0.75rem 1rem;
+	font: inherit;
+	font-weight: 600;
+	font-size: 1.05rem;
+	border: none;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: transform 0.06s ease, background-color 0.15s ease;
+}
+
+.btn:active {
+	transform: translateY(1px);
+}
+
+.btn-primary {
+	background: var(--coral);
+	color: #FFFFFF;
+	box-shadow: 0 2px 6px rgba(200, 88, 67, 0.25);
+}
+
+.btn-primary:hover {
+	background: var(--coral-deep);
+}
+
+.btn-quiet {
+	display: inline-block;
+	width: auto;
+	min-height: 2.75rem;
+	padding: 0.4rem 1.15rem;
+	background: transparent;
+	border: 1.5px solid var(--line-strong);
+	border-radius: 999px;
+	color: var(--ink);
+	font-size: 0.95rem;
+}
+
+/* Forms */
+.form-card label {
+	display: block;
+	margin: 1rem 0 0.35rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.form-card label:first-child {
+	margin-top: 0;
+}
+
+.form-card input,
+.form-card select {
+	width: 100%;
+	min-height: 3.25rem;
+	padding: 0.6rem 0.8rem;
+	font: inherit;
+	font-size: 1.05rem;
+	color: var(--ink);
+	background: #FFFFFF;
+	border: 1.5px solid var(--line-strong);
+	border-radius: 12px;
+}
+
+.form-card .btn {
+	margin-top: 1.25rem;
+}
+
+/* Focus visible for keyboard users */
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+	outline: 3px solid var(--sea);
+	outline-offset: 2px;
+}
+
+/* Empty states give direction, not mood */
+.empty {
+	margin: 0 0 0.8rem;
+	padding: 1.15rem 1rem;
+	border: 1.5px dashed var(--line-strong);
+	border-radius: var(--radius);
+	text-align: center;
+	color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
+	}
+}

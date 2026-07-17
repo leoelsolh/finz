@@ -1,53 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Counter · Hillend Surf Hire</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Admin Panel</h1>
-    <div>
-        <h2>All active rentals: </h2>
-        <p>
-            {% for rental in rentals %}
-                <p>{{ rental.name }} is out with {{ rental.name_booked }}</p>
-                <form method="post" action="/admin/return">
-                    <input type="hidden" name="board_id" value="{{ rental.board_id }}">
-                    <button type="submit">Mark as Returned</button>
-                </form>
-            {% endfor %}
-        </p>
-    </div>
-    <div>
-        <h2>Todays Bookings:</h2>
-        <p>
-            {% for booking in bookings %}
-                <p>{{ booking.name }} booked {{ booking.size_requested }}</p>
-                <p>{{ "wetsuit included" if booking.wetsuit else "no wetsuit" }}</p>
-            {% else %}<p>No bookings today</p>{% endfor %}
-        </p>
-    </div>
-    <h2>Mark In / Out</h2>
-    <div>
-        Want to mark a board going out? Chose which board below:
-    </div>
-    <p>
-        <Label>
-            Which board is leaving?
-        </Label>
-    </p>
-    <form method="post" action="/admin/out">
-        <select name="board_id">
-            {% for board in board_stock %}
-                <option value="{{ board.id }}">{{ board.name }}</option>
-            {% endfor %}
-        </select>
-        <div>
-            <label>name of renter:</label>
-            <input name="renter_name">
-        </div>
-        <button type="submit">Mark Out</button>
-    </form>
-    <form method="post" action="/admin/logout">
-        <button type="submit">Log Out</button>
-    </form>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>Counter</h1>
+		</div>
+		<form method="post" action="/admin/logout">
+			<button type="submit" class="btn btn-quiet">Log out</button>
+		</form>
+	</header>
+
+	<p class="day-summary">
+		<strong>{{ rentals|length }}</strong> out ·
+		<strong>{{ board_stock|length }}</strong> in the racks ·
+		<strong>{{ bookings|length }}</strong> booked today
+	</p>
+
+	<main>
+		<section class="zone">
+			<h2>Out now</h2>
+			{% for rental in rentals %}
+				<article class="card">
+					<div class="card-head">
+						<h3>{{ rental.name }} <span class="size">{{ rental.size }}</span></h3>
+						<span class="chip chip-out">Out</span>
+					</div>
+					<p>With {{ rental.name_booked }} since {{ rental.went_out[11:16] }}</p>
+					<form method="post" action="/admin/return">
+						<input type="hidden" name="board_id" value="{{ rental.board_id }}">
+						<button type="submit" class="btn btn-primary">Mark as returned</button>
+					</form>
+				</article>
+			{% else %}
+				<p class="empty">Nothing out. Every board is in the rack.</p>
+			{% endfor %}
+		</section>
+
+		<section class="zone">
+			<h2>Today's bookings</h2>
+			{% for booking in bookings %}
+				<article class="card">
+					<div class="card-head">
+						<h3>{{ booking.name }}</h3>
+						<span class="chip chip-sea">{{ booking.size_requested }}</span>
+					</div>
+					<p>
+						{{ "Wetsuit included" if booking.wetsuit else "No wetsuit" }} ·
+						<a href="tel:{{ booking.phone }}">{{ booking.phone }}</a>
+					</p>
+				</article>
+			{% else %}
+				<p class="empty">No bookings today.</p>
+			{% endfor %}
+		</section>
+
+		<section class="zone">
+			<h2>Send a board out</h2>
+			{% if board_stock %}
+				<form method="post" action="/admin/out" class="card form-card">
+					<label for="board-select">Which board</label>
+					<select id="board-select" name="board_id">
+						{% for board in board_stock %}
+							<option value="{{ board.id }}">{{ board.name }} · {{ board.size }}</option>
+						{% endfor %}
+					</select>
+					<label for="renter-name">Who is taking it</label>
+					<input id="renter-name" name="renter_name" autocomplete="off">
+					<button type="submit" class="btn btn-primary">Mark out</button>
+				</form>
+			{% else %}
+				<p class="empty">Every board is out. Mark one as returned first.</p>
+			{% endif %}
+		</section>
+	</main>
 </body>
 </html>
