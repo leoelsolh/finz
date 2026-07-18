@@ -9,6 +9,7 @@ jobs:
     env: 
       SECRET_KEY: "dummy"
       ADMIN_HASH: "dummy"
+      ADMIN_PASSWORD: "dummy"
       ADMIN_USER: "dummy"
     steps:
     - uses: actions/checkout@v4
