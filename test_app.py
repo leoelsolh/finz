@@ -33,7 +33,7 @@ def test_index_loads(client):
 # Test site functions
 def test_failed_login(client):
     response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
-    assert response.status_code == 404
+    assert response.status_code == 401
 
 def test_successfull_login(client):
     response = client.post('/admin/login', data={'username': os.environ['ADMIN_USER'], 'password': os.environ['ADMIN_PASSWORD']}) 
