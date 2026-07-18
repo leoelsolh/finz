@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
-
-#ruff check .
+ruff check .
 pytest test_app.py
