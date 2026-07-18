@@ -6,7 +6,10 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-  
+    env: 
+      SECRET_KEY: "dummy"
+      ADMIN_HASH: "dummy"
+      ADMIN_USER: "dummy"
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
