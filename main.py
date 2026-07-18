@@ -246,7 +246,7 @@ def booking(): #book a board
     
         add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
 
-        return f"Your booking has been processed. Thank you."
+        return "Your booking has been processed. Thank you."
         
     if request.method == "GET":
         sizes = get_board_sizes()
