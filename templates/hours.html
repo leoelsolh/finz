@@ -1,24 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
-    <h1>Hillend Opening Hours</h1>
-    <div>
-        <h3>
-            We are open from 9am until 6pm
-        </h3>
-        <p>
-            Times may vary depending on the date, but boards are generally accessible throughout the summer season.
-        </p>
-    </div>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Opening hours · Hillend Surf Hire</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div>
-        <h2>
-            Contact Us
-        </h2>
-        <p>Hillend Campsite 11 456</p>
-        <p>+44 6020 1020</p>
-        <p>hillend@gmail.com</p>
-    </div>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>Opening hours</h1>
+		</div>
+		<a class="btn btn-quiet" href="/">Home</a>
+	</header>
+
+	<main>
+		<div class="zone">
+			<article class="card">
+				<p class="opening">We are open from 9am until 6pm.</p>
+				<p>Times may vary depending on the date, but boards are generally accessible throughout the summer season.</p>
+			</article>
+		</div>
+
+		<section class="zone">
+			<h2>Contact us</h2>
+			<article class="card">
+				<address>
+					<p>Hillend Campsite 11 456</p>
+					<p><a href="tel:+4460201020">+44 6020 1020</a></p>
+					<p><a href="mailto:hillend@gmail.com">hillend@gmail.com</a></p>
+				</address>
+			</article>
+		</section>
+	</main>
 </body>
-</html> 
+</html>

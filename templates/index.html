@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
-    <h1>
-        Hillend Surfboard Rentals
-    </h1>
-    <p>Rent any board, have a great time, anytime</p>
-<body>
-    <h5>Hillend is located on the Gower peninsula of Wales and is known for its amazing beaches and great beginner surf condidtions</h5>
-</body>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Hillend Surf Hire · Surfboards by the day</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<body>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>Surfboards by the day</h1>
+		</div>
+	</header>
+
+	<p class="day-summary">
+		<strong>£25</strong> for the day, board only ·
+		<strong>£35</strong> with a wetsuit
+	</p>
+
+	<main>
+		<p class="lead">Surfboard hire on the Gower. Pick a board, add a wetsuit if you need one, and book it for the day.</p>
+
+		<div class="actions">
+			<a class="btn btn-primary" href="/book">Book a board</a>
+			<a class="btn btn-quiet" href="/boards">See the boards</a>
+		</div>
+
+		<p class="note">Hillend is on the Gower peninsula in Wales, known for its beaches and gentle beginner surf. See our <a href="/hours">opening hours and how to find us</a>.</p>
+	</main>
+</body>
 </html>

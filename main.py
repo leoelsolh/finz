@@ -20,7 +20,7 @@ from werkzeug.security import check_password_hash
 app = Flask(__name__)
 load_dotenv() #Load .env file
 
-app.config['SESSION_PERMANENT'] = False
+app.permanent_session_lifetime = datetime.timedelta(hours=8)
 app.secret_key = os.environ['SECRET_KEY'] #Load signing key
 admin_hash = os.environ['ADMIN_HASH'] #Load admin hash
 admin_user = os.environ['ADMIN_USER'] #Load admin user
@@ -193,14 +193,15 @@ def admin_login():
         recent = [attempt for attempt in login_attempts.get(ip, []) if now - attempt < 3600]
         login_attempts[ip] = recent 
 
+        # Ratelimit logic
         if len(recent) >= 5:
             return render_template('login.html', error='Too many attempts. Try again later.'), 429
 
+        # Success logic
         if username == admin_user: #TODO: Currently this could disclose the username due to longer response times upon correct username. 
             if check_password_hash(admin_hash, password):
-                print('\nmatch\n')
-
                 login_attempts.pop(ip, None)
+                session.permanent = True
                 session['name'] = username
                 return redirect(url_for('admin'))
 
@@ -258,7 +259,7 @@ def booking(): #book a board
     
         add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
 
-        return 'Your booking has been processed. Thank you.'
+        return render_template('book.html') #TODO:, message='Your booking has been processed. Thank you.')
         
     if request.method == 'GET':
         sizes = get_board_sizes()

@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
-    <h1>{{ board.name }}</h1>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ board.name }} · Hillend Surf Hire</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <p>Size: {{ board.size }}</p>
-    <p>Price: £{{ board.price }} per day</p>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>{{ board.name }}</h1>
+		</div>
+		<a class="btn btn-quiet" href="/boards">All boards</a>
+	</header>
+
+	<main>
+		<div class="zone">
+			<article class="card">
+				<dl class="spec">
+					<div>
+						<dt>Size</dt>
+						<dd>{{ board.size }}</dd>
+					</div>
+					<div>
+						<dt>Day rate</dt>
+						<dd>£{{ board.price }}</dd>
+					</div>
+				</dl>
+				<a class="btn btn-primary" href="/book">Book a board</a>
+			</article>
+		</div>
+	</main>
 </body>
 </html>

@@ -1,17 +1,42 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <h1>HillEnd Boards for Hire</h1>
-    </head>
-    <body>
-        <div>
-            <h4>All Boards</h4>
-            {% for board in board_stock %}
-                <p>{{ board.name }} - {{ board.size }} - £{{ board.price }}/day</p>
-            {% endfor %}
-        </div>
-        <div>
-            <h4>Free Boards</h4>
-        </div>
-    </body>
+<html lang="en-GB">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>The boards · Hillend Surf Hire</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>The boards</h1>
+		</div>
+		<a class="btn btn-quiet" href="/">Home</a>
+	</header>
+
+	<p class="day-summary">
+		<strong>{{ board_stock|length }}</strong> board{% if board_stock|length != 1 %}s{% endif %} to choose from
+	</p>
+
+	<main>
+		<section class="zone">
+			<h2>All boards</h2>
+			{% for board in board_stock %}
+				<a class="card-link" href="/boards/{{ board.id }}">
+					<article class="card">
+						<div class="card-head">
+							<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
+							<span class="price">£{{ board.price }} <small>a day</small></span>
+						</div>
+					</article>
+				</a>
+			{% else %}
+				<p class="empty">No boards listed just now.</p>
+			{% endfor %}
+		</section>
+
+		<a class="btn btn-primary page-cta" href="/book">Book a board</a>
+	</main>
+</body>
 </html>

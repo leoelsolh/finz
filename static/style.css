@@ -31,6 +31,10 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
+a {
+	color: var(--sea-deep);
+}
+
 .topbar,
 .day-summary,
 main {
@@ -90,7 +94,8 @@ h1 {
 	margin-top: 1.9rem;
 }
 
-.zone h2 {
+.zone h2,
+.zone legend {
 	margin: 0 0 0.6rem;
 	font-size: 0.8rem;
 	font-weight: 700;
@@ -177,6 +182,14 @@ h1 {
 	transform: translateY(1px);
 }
 
+/* Links dressed as buttons keep the same shape and centring */
+a.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+}
+
 .btn-primary {
 	background: var(--coral);
 	color: #FFFFFF;
@@ -228,6 +241,74 @@ h1 {
 	margin-top: 1.25rem;
 }
 
+/* Booking form. Fieldsets group the questions without looking like paperwork. */
+fieldset.zone {
+	border: none;
+	margin: 1.9rem 0 0;
+	padding: 0;
+	min-inline-size: auto;
+}
+
+fieldset.zone legend {
+	float: left;
+	width: 100%;
+	padding: 0;
+}
+
+fieldset.zone legend + * {
+	clear: both;
+}
+
+.booking-form > .btn {
+	margin-top: 1.5rem;
+}
+
+.form-card .optional {
+	font-weight: 400;
+	font-size: 0.85rem;
+	color: var(--ink-soft);
+}
+
+/* The wetsuit choice reads as a switch, not small print */
+.form-card .wetsuit-choice {
+	display: flex;
+	align-items: center;
+	gap: 0.85rem;
+	margin: 1.25rem 0 0;
+	padding: 0.95rem 1rem;
+	background: #FFFFFF;
+	border: 1.5px solid var(--line-strong);
+	border-radius: 12px;
+	cursor: pointer;
+}
+
+.form-card .wetsuit-choice input {
+	width: 1.6rem;
+	height: 1.6rem;
+	min-height: 0;
+	margin: 0;
+	flex-shrink: 0;
+	accent-color: var(--sea);
+}
+
+.form-card .wetsuit-choice:has(input:checked) {
+	background: var(--foam);
+	border-color: var(--sea);
+}
+
+.wetsuit-choice strong {
+	display: block;
+	font-weight: 600;
+	font-size: 1.05rem;
+}
+
+.wetsuit-choice small {
+	display: block;
+	margin-top: 0.1rem;
+	font-size: 0.9rem;
+	color: var(--ink-soft);
+}
+
 /* Focus visible for keyboard users */
 .btn:focus-visible,
 input:focus-visible,
@@ -264,6 +345,116 @@ a:focus-visible {
 	border-radius: var(--radius);
 	text-align: center;
 	color: var(--ink-soft);
+}
+
+/* Public pages */
+.lead {
+	margin: 1.9rem 0 0;
+	font-size: 1.15rem;
+	line-height: 1.55;
+}
+
+.actions {
+	display: grid;
+	gap: 0.8rem;
+	margin-top: 1.5rem;
+}
+
+.note {
+	margin: 1.8rem 0 0;
+	color: var(--ink-soft);
+}
+
+.page-cta {
+	margin-top: 1.6rem;
+}
+
+/* Catalogue cards are one big link each */
+.card-link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.card-link .card {
+	transition: border-color 0.15s ease, transform 0.06s ease;
+}
+
+.card-link:hover .card {
+	border-color: var(--sea);
+}
+
+.card-link:active .card {
+	transform: translateY(1px);
+}
+
+.price {
+	flex-shrink: 0;
+	font-weight: 700;
+	font-size: 1.05rem;
+}
+
+.price small {
+	font-weight: 400;
+	font-size: 0.8rem;
+	color: var(--ink-soft);
+}
+
+/* Single board spec list */
+.spec {
+	margin: 0;
+}
+
+.spec div {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	padding: 0.55rem 0;
+	border-bottom: 1px solid var(--line);
+}
+
+.spec div:last-child {
+	border-bottom: none;
+}
+
+.spec dt {
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.spec dd {
+	margin: 0;
+	font-size: 1.15rem;
+}
+
+.spec + .btn {
+	margin-top: 1rem;
+}
+
+/* Opening hours and contact */
+.card .opening {
+	margin: 0 0 0.3rem;
+	color: var(--ink);
+	font-size: 1.2rem;
+}
+
+.card address {
+	font-style: normal;
+}
+
+.card address p {
+	margin: 0.5rem 0 0;
+	color: var(--ink);
+	font-size: 1.05rem;
+}
+
+.card address p:first-child {
+	margin-top: 0;
+}
+
+.card address a {
+	display: inline-block;
+	padding: 0.3rem 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
