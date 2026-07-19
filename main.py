@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import time
 import sqlite3
 import datetime
 import contextlib
@@ -24,6 +25,7 @@ app.secret_key = os.environ['SECRET_KEY'] #Load signing key
 admin_hash = os.environ['ADMIN_HASH'] #Load admin hash
 admin_user = os.environ['ADMIN_USER'] #Load admin user
 schema.init_db() #Init database tables
+login_attempts = {}
 
 # Site logic
 @contextlib.contextmanager
@@ -182,19 +184,29 @@ def admin(): #admin dashboard
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         
+        ip = request.remote_addr
+        now = time.time()
+        recent = [attempt for attempt in login_attempts.get(ip, []) if now - attempt < 3600]
+        login_attempts[ip] = recent 
+
+        if len(recent) >= 5:
+            return render_template('login.html', error='Too many attempts. Try again later.'), 429
+
         if username == admin_user: #TODO: Currently this could disclose the username due to longer response times upon correct username. 
             if check_password_hash(admin_hash, password):
                 print('\nmatch\n')
 
+                login_attempts.pop(ip, None)
                 session['name'] = username
                 return redirect(url_for('admin'))
 
+        login_attempts[ip].append(now)
         return render_template('login.html', error='wrong username or password'), 401
+
     return render_template('login.html')
 
 @app.route('/admin/logout', methods=['POST'])
