@@ -7,14 +7,14 @@ jobs:
 
     runs-on: ubuntu-latest
     env: 
-      SECRET_KEY: "dummy"
-      ADMIN_HASH: "dummy"
-      ADMIN_PASSWORD: "dummy"
-      ADMIN_USER: "dummy"
+      SECRET_KEY: 'dummy'
+      ADMIN_HASH: 'scrypt:32768:8:1$Yba5HzCXoOYqozru$db45a0becb3833e2087958c2d66dcd8868034b7e08fb216b6fa20378dd50d31df378910dc8f95bedadad985ba6ffc976aae772a0f6703aa06cb77692ef9b45b7'
+      ADMIN_PASSWORD: 'dummy'
+      ADMIN_USER: 'dummy'
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with: 
-        python-version: "3.13"
+        python-version: '3.13'
     - run: pip install -r requirements.txt
     - run: bash check.sh
