@@ -194,7 +194,7 @@ def admin_login():
                 session['name'] = username
                 return redirect(url_for('admin'))
 
-        abort(401, 'wrong username or password')
+        return render_template('login.html', error='wrong username or password'), 401
     return render_template('login.html')
 
 @app.route('/admin/logout', methods=['POST'])

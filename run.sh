@@ -5,4 +5,4 @@ if [ ! -f 'rental.db' ]; then
     echo 'Seeding complete' 
 fi
 
-python3 main.py 
+python3 main.py

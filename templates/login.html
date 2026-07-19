@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 <head>
-    <h1>Login</h1>
-    <h2>Admin Panel Login</h2>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Log in · Hillend Surf Hire</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form name="login_form" action="/admin/login" method="post">
-        <div>
-            <label>Username:</label>
-            <input name="username">
-        </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password">
-        </div>
-        <div>
-            <button type="submit">Continue</button>
-        </div>
-    </form>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Hillend Surf Hire</p>
+			<h1>Log in</h1>
+		</div>
+	</header>
+
+	<main>
+		{% if error %}
+			<p class="form-error" role="alert">{{ error }}</p>
+		{% endif %}
+
+		<form name="login_form" method="post" action="/admin/login" class="card form-card login-form">
+			<label for="username">Username</label>
+			<input id="username" type="text" name="username" value="{{ request.form.get('username', '') }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {% if not error %}autofocus{% endif %}>
+
+			<label for="password">Password</label>
+			<input id="password" type="password" name="password" autocomplete="current-password" enterkeyhint="go" required {% if error %}autofocus{% endif %}>
+
+			<button type="submit" class="btn btn-primary">Log in</button>
+		</form>
+	</main>
 </body>
 </html>

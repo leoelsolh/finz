@@ -1,4 +1,4 @@
-/* Hillend Surf Hire, shared styles. Sandy base, sea blue for headings and labels, coral for actions only. */
+/* Hillend Surf Hire, shared styles. Sandy base, sea blue for headings and labels, coral for actions only, gorse yellow for gentle warnings. */
 
 :root {
 	--sand: #F8F3E9;
@@ -12,6 +12,9 @@
 	--foam: #E4EEF0;
 	--coral: #E4705C;
 	--coral-deep: #C85843;
+	--gorse-soft: #F7EBC9;
+	--gorse-line: #E2CC8E;
+	--gorse-deep: #6B4D10;
 	--radius: 14px;
 }
 
@@ -232,6 +235,25 @@ select:focus-visible,
 a:focus-visible {
 	outline: 3px solid var(--sea);
 	outline-offset: 2px;
+}
+
+/* Log in page. Gorse tint flags a failed attempt without sounding an alarm, coral stays reserved for the button. */
+.login-form {
+	margin-top: 1.9rem;
+}
+
+.form-error {
+	margin: 1.6rem 0 0;
+	padding: 0.85rem 1.05rem;
+	background: var(--gorse-soft);
+	border: 1.5px solid var(--gorse-line);
+	border-radius: var(--radius);
+	color: var(--gorse-deep);
+	font-size: 0.98rem;
+}
+
+.form-error + .login-form {
+	margin-top: 0.9rem;
 }
 
 /* Empty states give direction, not mood */
