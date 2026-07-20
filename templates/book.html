@@ -20,6 +20,10 @@
 	</p>
 
 	<main>
+		{% for message in get_flashed_messages() %}
+			<p class="form-confirm" role="status">{{ message }}</p>
+		{% endfor %}
+
 		<form method="post" action="/book" class="booking-form">
 			<fieldset class="zone">
 				<legend>Your details</legend>

@@ -8,6 +8,7 @@ import contextlib
 import schema
 
 from flask import Flask
+from flask import flash
 from flask import render_template
 from flask import abort
 from flask import request
@@ -258,8 +259,8 @@ def booking(): #book a board
         booking_date = request.form['hire_date']
     
         add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
-
-        return render_template('book.html') #TODO:, message='Your booking has been processed. Thank you.')
+        flash('Your booking has been processed. Thank you.')
+        return redirect(url_for('booking')) #TODO:, message='Your booking has been processed. Thank you.')
         
     if request.method == 'GET':
         sizes = get_board_sizes()

@@ -337,6 +337,21 @@ a:focus-visible {
 	margin-top: 0.9rem;
 }
 
+/* Booking confirmation, flashed after a successful booking. Foam and sea read as good news, coral stays reserved for the button. */
+.form-confirm {
+	margin: 1.6rem 0 0;
+	padding: 0.85rem 1.05rem;
+	background: var(--foam);
+	border: 1.5px solid var(--sea);
+	border-radius: var(--radius);
+	color: var(--sea-deep);
+	font-size: 0.98rem;
+}
+
+.form-confirm + .booking-form fieldset.zone:first-of-type {
+	margin-top: 1.1rem;
+}
+
 /* Empty states give direction, not mood */
 .empty {
 	margin: 0 0 0.8rem;
