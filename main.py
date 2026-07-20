@@ -199,12 +199,14 @@ def admin_login():
             return render_template('login.html', error='Too many attempts. Try again later.'), 429
 
         # Success logic
-        if username == admin_user: #TODO: Currently this could disclose the username due to longer response times upon correct username. 
-            if check_password_hash(admin_hash, password):
-                login_attempts.pop(ip, None)
-                session.permanent = True
-                session['name'] = username
-                return redirect(url_for('admin'))
+        username_ok = username == admin_user
+        password_ok = check_password_hash(admin_hash, password)
+
+        if username_ok and password_ok:
+            login_attempts.pop(ip, None)
+            session.permanent = True
+            session['name'] = username 
+            return redirect(url_for('admin'))
 
         login_attempts[ip].append(now)
         return render_template('login.html', error='wrong username or password'), 401
@@ -253,14 +255,18 @@ def booking(): #book a board
 
         booking_name = request.form['name']
         booking_number = request.form['phone']
-        booking_email = request.form['email']
+        booking_email = request.form.get('email')
         booking_size = request.form['size_requested']
-        booking_wetsuit = 1 if request.form.get('wetsuit') else 0 # If wetsuit is unticked, this will prevent an error since an unticked checkbox returns empty instead of false.
+        booking_wetsuit = 1 if request.form.get('wetsuit') else 0
         booking_date = request.form['hire_date']
-    
+
+        if not booking_name or not booking_date or not booking_size:
+            sizes = get_board_sizes()
+            return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
+
         add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
         flash('Your booking has been processed. Thank you.')
-        return redirect(url_for('booking')) #TODO:, message='Your booking has been processed. Thank you.')
+        return redirect(url_for('booking')) 
         
     if request.method == 'GET':
         sizes = get_board_sizes()
