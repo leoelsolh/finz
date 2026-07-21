@@ -2,9 +2,11 @@
 import os
 import pytest
 from main import app
+from main import login_attempts
 
 @pytest.fixture
 def client():
+    login_attempts.clear()
     with app.test_client() as client:
         yield client
 
@@ -31,6 +33,13 @@ def test_index_loads(client):
     assert response.status_code == 200
 
 # Test site functions
+def test_login_lockout(client):
+    for attempt in range(5):
+        response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
+        assert response.status_code == 401
+    blocked = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
+    assert blocked.status_code == 429
+
 def test_failed_login(client):
     response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
     assert response.status_code == 401

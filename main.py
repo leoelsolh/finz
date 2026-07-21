@@ -186,9 +186,6 @@ def admin(): #admin dashboard
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        
         ip = request.remote_addr
         now = time.time()
         recent = [attempt for attempt in login_attempts.get(ip, []) if now - attempt < 3600]
@@ -198,6 +195,9 @@ def admin_login():
         if len(recent) >= 5:
             return render_template('login.html', error='Too many attempts. Try again later.'), 429
 
+        username = request.form['username']
+        password = request.form['password']
+ 
         # Success logic
         username_ok = username == admin_user
         password_ok = check_password_hash(admin_hash, password)
