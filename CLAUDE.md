@@ -45,3 +45,5 @@ Semantic HTML. Use the right element for the job.
 ## Context
 
 This is a real site for a working surf hire shop, not a demo. Copy should be plain and useful, not marketing filler. The person using the admin side is not technical and will be using it at a counter, often in a hurry. Prioritise large tap targets and obvious state over density or cleverness.
+
+Name was changed from Hillend surf hire to Fins surf hire 

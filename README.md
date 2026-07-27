@@ -1,5 +1,5 @@
 
-# Hillend Surf Hire
+# Fins Surf Hire
 ## Surf Rental App / made with flask
 
 
