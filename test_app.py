@@ -34,7 +34,7 @@ def test_index_loads(client):
 
 # Test site functions
 def test_login_lockout(client):
-    for attempt in range(5):
+    for _ in range(5):
         response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
         assert response.status_code == 401
     blocked = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
@@ -44,7 +44,7 @@ def test_failed_login(client):
     response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
     assert response.status_code == 401
 
-def test_successfull_login(client):
+def test_successful_login(client):
     response = client.post('/admin/login', data={'username': os.environ['ADMIN_USER'], 'password': os.environ['ADMIN_PASSWORD']}) 
     assert response.status_code == 302
 
