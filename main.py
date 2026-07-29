@@ -5,8 +5,6 @@ import sqlite3
 import datetime
 import contextlib
 
-import schema
-
 from flask import Flask
 from flask import flash
 from flask import render_template
@@ -17,6 +15,8 @@ from flask import session
 from flask import url_for
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash
+
+import schema
 
 app = Flask(__name__)
 load_dotenv() #Load .env file
