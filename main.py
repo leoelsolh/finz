@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import os
 import time
 import sqlite3
 import datetime
@@ -13,25 +12,22 @@ from flask import request
 from flask import redirect
 from flask import session
 from flask import url_for
-from dotenv import load_dotenv
 from werkzeug.security import check_password_hash
 
+import config
 import schema
 
 app = Flask(__name__)
-load_dotenv() #Load .env file
-
+app.secret_key = config.SECRET_KEY
 app.permanent_session_lifetime = datetime.timedelta(hours=8)
-app.secret_key = os.environ['SECRET_KEY'] #Load signing key
-admin_hash = os.environ['ADMIN_HASH'] #Load admin hash
-admin_user = os.environ['ADMIN_USER'] #Load admin user
 schema.init_db() #Init database tables
 login_attempts = {}
+
 
 # Site logic
 @contextlib.contextmanager
 def get_connection():
-    connection = sqlite3.connect('rental.db')
+    connection = sqlite3.connect(config.DB_PATH)
     connection.row_factory = sqlite3.Row
     try:
         yield connection
@@ -199,8 +195,8 @@ def admin_login():
         password = request.form['password']
  
         # Success logic
-        username_ok = username == admin_user
-        password_ok = check_password_hash(admin_hash, password)
+        username_ok = username == config.ADMIN_USER
+        password_ok = check_password_hash(config.ADMIN_HASH, password)
 
         if username_ok and password_ok:
             login_attempts.pop(ip, None)

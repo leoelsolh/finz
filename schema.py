@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 import sqlite3
+from config import DB_PATH
 
 def init_db():
     try:
-        with sqlite3.connect("rental.db") as database:
+        with sqlite3.connect(DB_PATH) as database:
             cursor = database.cursor()
 
             cursor.execute('''
