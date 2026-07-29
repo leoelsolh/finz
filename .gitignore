@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 *.sqlite
 *.db
+test_rental.db
 .env
 .ruff_cache
 .pytest_cache

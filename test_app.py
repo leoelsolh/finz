@@ -54,7 +54,7 @@ def test_db_connection():
     #TODO: write a connection test.
     pass
 
-def test_get_all_boards():
+def test_get_all_boards(init_test_db):
     boards = get_all_boards()
     assert boards is not None
     assert len(boards) >= 1
