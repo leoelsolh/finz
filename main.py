@@ -12,6 +12,7 @@ from flask import request
 from flask import redirect
 from flask import session
 from flask import url_for
+from zoneinfo import ZoneInfo
 from werkzeug.security import check_password_hash
 
 import config
@@ -92,35 +93,6 @@ def add_booking(name, phone, email, wetsuit, hire_date, size):
     except sqlite3.Error as error:
         print(f'\nError in fetching form values:\n{error}\n')
 
-def mark_board_out(board_id, renter_name):
-    try:
-        with get_connection() as connection:
-            cursor = connection.cursor()
-            
-            went_out = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor.execute('''
-                INSERT INTO rentals (went_out, board_id, name_booked) VALUES (?, ?, ?)
-            ''', (went_out, board_id, renter_name))
-            
-            connection.commit()
-    
-    except sqlite3.Error as sql_error:
-        print(f'\nSQL error inserting rental time-stamp:\n{sql_error}\n')
-
-def mark_board_in(board_id):
-    try:
-        with get_connection() as connection:
-            cursor = connection.cursor()
-
-            came_back = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor.execute('''
-                UPDATE rentals SET came_back = ? WHERE board_id = ? AND came_back IS NULL
-                ''', (came_back, board_id))
-            connection.commit()
-
-    except sqlite3.Error as sql_error:
-        print(f'\nSQL error closing rental time-stamp:\n{sql_error}\n')
-
 def get_available_boards():
     try:
         with get_connection() as connection:
@@ -141,6 +113,35 @@ def get_available_boards():
 
 
 # Admin logic
+def mark_board_out(board_id, renter_name):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+            
+            went_out = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute('''
+                INSERT INTO rentals (went_out, board_id, name_booked) VALUES (?, ?, ?)
+            ''', (went_out, board_id, renter_name))
+            
+            connection.commit()
+    
+    except sqlite3.Error as sql_error:
+        print(f'\nSQL error inserting rental time-stamp:\n{sql_error}\n')
+
+def mark_board_in(board_id):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            came_back = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute('''
+                UPDATE rentals SET came_back = ? WHERE board_id = ? AND came_back IS NULL
+                ''', (came_back, board_id))
+            connection.commit()
+
+    except sqlite3.Error as sql_error:
+        print(f'\nSQL error closing rental time-stamp:\n{sql_error}\n')
+
 def get_active_rentals():
     try:
         with get_connection() as connection:
@@ -162,7 +163,7 @@ def get_todays_bookings():
         with get_connection() as connection:
             cursor = connection.cursor()
 
-            today = datetime.datetime.now().strftime('%Y-%m-%d')
+            today = datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)).strftime('%Y-%m-%d')
             cursor.execute('''SELECT * FROM bookings WHERE hire_date = ?''', (today,))
             return cursor.fetchall()
 

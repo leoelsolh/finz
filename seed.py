@@ -27,4 +27,4 @@ try:
 
         
 except sqlite3.Error as error:
-    print(f"Seeding failed: {error}")
+    print(f"Seeding failed: {error}") 
