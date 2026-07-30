@@ -1,18 +1,18 @@
 # Fins Surf Hire
 ### [ Surf Rental App / made with flask ] 
 [ Currently in Active Development ]
-![Admin Dashboard - v1.0](docs/dash.png)
+
 ![CI](https://github.com/leoelsolh/fins-surf-rental/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.13-blue) ![Status](https://img.shields.io/badge/status-in%20development-orange)
 A booking and rental tracking site for a surfboard hire shop on the Gower peninsula in Wales.
 
-My friend owns a surfshop which hires boards and wetsuits to visitors. She told me bookings currently come in by phone, to a personal mobile, and are noted on paper or not at all. Nobody had a reliable record of which boards were out and which came back. This site exists to fix both those problems. Now customers book online instead of calling, and whoever is running the shop can see at a glance what is out and with whom.
+My friend owns a surf shop which hires boards and wetsuits to visitors. She told me bookings currently come in by phone, to a personal mobile, and are noted on paper or not at all. Nobody had a reliable record of which boards were out and which came back. This site exists to fix both those problems. Now customers book online instead of calling, and whoever is running the shop can see at a glance what is out and with whom.
 
 There are two halves. The public side lets customers see the boards, the prices, the opening hours and the address, and place a booking without phoning. The admin side, behind a login, lets the shop mark a board as gone out, mark it as returned, and see the day's bookings. The public side takes the weight off the phone. The admin side takes the weight off memory.
 
 Built with Flask and sqlite3 on the Python standard library. No ORM, no framework beyond Flask itself. The frontend is plain CSS, mobile first, on the assumption that both customers and staff will mostly be on phones.
 
 ### [ How can I use this myself? ]
-If you want to use this base project ive made to potentionally help you run your own surf school or surf hire shop, heres what you need to consider.
+If you want to use this base project I've made to potentially help you run your own surf school or surf hire shop, here's what you need to consider.
 
 _These need answering by the shop, not by the developer._
 
@@ -24,7 +24,7 @@ _These need answering by the shop, not by the developer._
 6. Real prices, real stock, and the real shop phone number and address.
 
 ### [ Running it locally. ]
-Once youve setled on the points above, heres how you can set this up onn your local machine, using a devserver for pre-prod design and configuration.
+Once you've settled on the points above, here's how you can set this up on your local machine, using a devserver for pre-prod design and configuration.
 
 ###### [ Step One ] 
 Install the requirements from the `requirements.txt` file:
@@ -52,7 +52,7 @@ python3
 ```
 
 ###### [ Step Three ]
-Lastly your going to want to run the `run.sh` shell script, which will start a local flask server. *THIS IS NOT A PROD READY SERVER* so be careful.
+Lastly you're going to want to run the `run.sh` shell script, which will start a local flask server. *THIS IS NOT A PROD READY SERVER* so be careful.
 
 ### [ Running Tests. ]
 The suite uses pytest, with ruff for linting. Both are in `requirements.txt`.
