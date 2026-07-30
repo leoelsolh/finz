@@ -1,11 +1,12 @@
-__pycache__/
+.*
 .git
+.env
 .venv/
 *.sqlite
 *.db
-test_rental.db
-.env
+__pycache__/
 .ruff_cache
 .pytest_cache
+test_rental.db
 .claude
 CLAUDE.md
