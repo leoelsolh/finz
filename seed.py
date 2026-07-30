@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-# Seed Script
+#
+#    __Seed Script__
+#  [ Placeholder data ]
+#
 import sqlite3
 import datetime
 import schema
