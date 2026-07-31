@@ -9,7 +9,6 @@
 - [ ] Split DB helpers into db.py once main.py gets unwieldy
 
 #### [ Bugs ]
-- [ ] DB helpers swallow exceptions and return None, so a DB failure is indistinguishable from "no results"
 
 #### [ Security review (post-publish, ongoing) ]
 - [ ] No CSRF protection on any POST route

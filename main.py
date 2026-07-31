@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import time
 import sqlite3
+import logging
 import datetime
 import contextlib
 
@@ -21,11 +22,19 @@ import schema
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 app.permanent_session_lifetime = datetime.timedelta(hours=8)
+logging.basicConfig(level=logging.INFO)
+
 schema.init_db() #Init database tables
 login_attempts = {}
 
+class DatabaseError(Exception):
+    '''Raised when a database operation fails.'''
 
 # Site logic
+@app.errorhandler(DatabaseError)
+def handle_database_error(error):
+    return render_template('error.html'), 503
+
 @contextlib.contextmanager
 def get_connection():
     connection = sqlite3.connect(config.DB_PATH)
@@ -55,7 +64,8 @@ def get_board_by_id(board_id):
             return cursor.fetchone() 
 
     except sqlite3.OperationalError as op_error:
-        print(f'\nError in this operation:\n{op_error}\n')
+        logging.exception('Failed to fetch board')
+        raise DatabaseError('Could not fetch board') from op_error
 
 def get_all_boards():
     try:
@@ -66,7 +76,8 @@ def get_all_boards():
             return cursor.fetchall()
 
     except sqlite3.OperationalError as op_error:
-        print(f'\nError fetching boards:\n{op_error}\n')
+        logging.exception('Failed to fetch boards')
+        raise DatabaseError('Could not fetch boards') from op_error
 
 def get_board_sizes():
     try: 
@@ -77,7 +88,8 @@ def get_board_sizes():
             return cursor.fetchall()
 
     except sqlite3.OperationalError as op_error:
-        print(f'\nError fetching sizes:\n{op_error}\n')
+        logging.exception('Failed to fetch boards by size')
+        raise DatabaseError('Could not fetch boards by size') from op_error
 
 def add_booking(name, phone, email, wetsuit, hire_date, size):
     try:
@@ -91,7 +103,8 @@ def add_booking(name, phone, email, wetsuit, hire_date, size):
             connection.commit()
 
     except sqlite3.Error as error:
-        print(f'\nError in fetching form values:\n{error}\n')
+        logging.exception('Failed to add booking')
+        raise DatabaseError('Could not save booking') from error
 
 def get_available_boards():
     try:
@@ -109,7 +122,8 @@ def get_available_boards():
             return cursor.fetchall()
 
     except sqlite3.Error as sql_error:
-        print(f'\nSQLite error when fetching available boards:\n{sql_error}\n')
+        logging.exception('Failed to fetch available boards')
+        raise DatabaseError('Could not fetch available boards') from sql_error
 
 
 # Admin logic
@@ -126,7 +140,8 @@ def mark_board_out(board_id, renter_name):
             connection.commit()
     
     except sqlite3.Error as sql_error:
-        print(f'\nSQL error inserting rental time-stamp:\n{sql_error}\n')
+        logging.exception('Failed to mark board out')
+        raise DatabaseError('Could not mark board out') from sql_error
 
 def mark_board_in(board_id):
     try:
@@ -140,7 +155,8 @@ def mark_board_in(board_id):
             connection.commit()
 
     except sqlite3.Error as sql_error:
-        print(f'\nSQL error closing rental time-stamp:\n{sql_error}\n')
+        logging.exception('Failed to mark board in')
+        raise DatabaseError('Could not mark board in') from sql_error
 
 def get_active_rentals():
     try:
@@ -156,7 +172,8 @@ def get_active_rentals():
             return cursor.fetchall()
 
     except sqlite3.Error as sql_error:
-        print(f'\nSQL error fetching active rentals:\n{sql_error}\n')
+        logging.exception('Failed to fetch active rentals')
+        raise DatabaseError('Could not fetch active rentals') from sql_error
 
 def get_todays_bookings():
     try:
@@ -168,7 +185,8 @@ def get_todays_bookings():
             return cursor.fetchall()
 
     except sqlite3.Error as sql_error:
-        print(f'\nSQLite Error when fetching todays bookings:\n{sql_error}\n')
+        logging.exception('Failed to get todays bookings')
+        raise DatabaseError('Could not get todays bookings') from sql_error
 
 
 # Admin pages
@@ -228,8 +246,11 @@ def admin_out(): #mark a board as gone out
     mark_board_out(board_id, renter_name)
     return redirect(url_for('admin'))
 
-
 # Page return logic
+@app.route('/preview-error')
+def previewError():
+    raise DatabaseError('Preview')
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -261,10 +282,15 @@ def booking(): #book a board
             sizes = get_board_sizes()
             return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
 
-        add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
-        flash('Your booking has been processed. Thank you.')
-        return redirect(url_for('booking')) 
-        
+        try:
+            add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
+            flash('Your booking has been processed. Thank you.')
+            return redirect(url_for('booking'))
+            
+        except DatabaseError:
+            #flash('Something went wrong, try again shortly')
+            return render_template('book.html', sizes=[], error='Something went wrong, Try again shortly'), 500
+
     if request.method == 'GET':
         sizes = get_board_sizes()
         return render_template('book.html', sizes=sizes)
