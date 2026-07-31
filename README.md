@@ -3,7 +3,8 @@
 [ Currently in Active Development ]
 
 ![CI](https://github.com/leoelsolh/fins-surf-rental/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.13-blue) ![Status](https://img.shields.io/badge/status-in%20development-orange)
-A booking and rental tracking site for a surfboard hire shop on the Gower peninsula in Wales.
+
+ A booking and rental tracking site for a surfboard hire shop on the Gower peninsula in Wales.
 
 My friend owns a surf shop which hires boards and wetsuits to visitors. She told me bookings currently come in by phone, to a personal mobile, and are noted on paper or not at all. Nobody had a reliable record of which boards were out and which came back. This site exists to fix both those problems. Now customers book online instead of calling, and whoever is running the shop can see at a glance what is out and with whom.
 

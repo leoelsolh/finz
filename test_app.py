@@ -1,6 +1,9 @@
 # Test Enviornment
-import os
+import time
+import datetime
 import pytest
+
+import config
 from main import app
 from main import login_attempts
 from main import get_all_boards
@@ -33,6 +36,7 @@ def test_index_loads(client):
     load = client.get('/')
     assert load.status_code == 200
 
+
 # Test site functions
 def test_login_lockout(client):
     for _ in range(5):
@@ -46,8 +50,26 @@ def test_failed_login(client):
     assert invalid_response.status_code == 401
 
 def test_successful_login(client):
-    response = client.post('/admin/login', data={'username': os.environ['ADMIN_USER'], 'password': os.environ['ADMIN_PASSWORD']}) 
+    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD}) 
     assert response.status_code == 302
+
+    response = client.get('/admin')
+    assert response.status_code == 200
+
+def test_expired_session(client, monkeypatch):
+    monkeypatch.setattr(app, 'permanent_session_lifetime', datetime.timedelta(seconds=1))
+
+    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD})
+    assert response.status_code == 302 
+    
+    response = client.get('/admin')
+    assert response.status_code == 200
+
+    time.sleep(2)
+
+    response = client.get('/admin')
+    assert response.status_code == 302 
+
 
 # Test database functions
 def test_db_connection():
