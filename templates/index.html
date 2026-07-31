@@ -1,33 +1,30 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Fins Surf Hire · Surfboards by the day</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Fins Surf Hire</p>
-			<h1>Surfboards by the day</h1>
-		</div>
-	</header>
+{% extends 'base.html' %}
 
-	<p class="day-summary">
-		<strong>£25</strong> for the day, board only ·
-		<strong>£35</strong> with a wetsuit
+{% block title %}Fins Surf Hire · Surfboards by the day{% endblock %}
+
+{% block body %}
+	<section class="hero">
+		<img class="hero-photo" src="{{ url_for('static', filename='img/hero.jpg') }}" alt="A surfer riding inside a breaking turquoise wave">
+		<div class="hero-inner">
+			<h1 class="display">Boards<br>by the day</h1>
+			<p class="hero-sub">Surfboard hire at Hillend on the Gower. Pick a board, add a wetsuit if you need one, and it is yours until six.</p>
+			<div class="actions">
+				<a class="btn btn-primary" href="/book">Book a board</a>
+				<a class="btn btn-ghost" href="/boards">See the boards</a>
+			</div>
+		</div>
+	</section>
+
+	<p class="report-strip">
+		<strong>£25</strong> board for the day ·
+		<strong>£35</strong> with a wetsuit ·
+		open <strong>9am to 6pm</strong>
 	</p>
 
 	<main>
-		<p class="lead">Surfboard hire on the Gower. Pick a board, add a wetsuit if you need one, and book it for the day.</p>
-
-		<div class="actions">
-			<a class="btn btn-primary" href="/book">Book a board</a>
-			<a class="btn btn-quiet" href="/boards">See the boards</a>
+		<div class="shell">
+			<p class="lead">Fins is at Hillend on the Gower peninsula in Wales, known for its beaches and gentle beginner surf. Book online and your board is waiting at the shop, no phone call needed.</p>
+			<p class="note">See our <a href="/hours">opening hours and how to find us</a>.</p>
 		</div>
-
-		<p class="note">Hillend is on the Gower peninsula in Wales, known for its beaches and gentle beginner surf. See our <a href="/hours">opening hours and how to find us</a>.</p>
 	</main>
-</body>
-</html>
+{% endblock %}

@@ -1,33 +1,31 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Log in · Fins Surf Hire</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Log in · Fins Surf Hire{% endblock %}
+
+{% block header %}
 	<header class="topbar">
-		<div>
-			<p class="eyebrow">Fins Surf Hire</p>
-			<h1>Log in</h1>
-		</div>
+		<a class="brand" href="/">Fins <span>Surf Hire</span></a>
 	</header>
+{% endblock %}
 
+{% block body %}
 	<main>
-		{% if error %}
-			<p class="form-error" role="alert">{{ error }}</p>
-		{% endif %}
+		<div class="shell shell-counter">
+			<h1 class="page-title">Log in</h1>
 
-		<form name="login_form" method="post" action="/admin/login" class="card form-card login-form">
-			<label for="username">Username</label>
-			<input id="username" type="text" name="username" value="{{ request.form.get('username', '') }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {% if not error %}autofocus{% endif %}>
+			{% if error %}
+				<p class="form-error" role="alert">{{ error }}</p>
+			{% endif %}
 
-			<label for="password">Password</label>
-			<input id="password" type="password" name="password" autocomplete="current-password" enterkeyhint="go" required {% if error %}autofocus{% endif %}>
+			<form name="login_form" method="post" action="/admin/login" class="card form-card login-form">
+				<label for="username">Username</label>
+				<input id="username" type="text" name="username" value="{{ request.form.get('username', '') }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {% if not error %}autofocus{% endif %}>
 
-			<button type="submit" class="btn btn-primary">Log in</button>
-		</form>
+				<label for="password">Password</label>
+				<input id="password" type="password" name="password" autocomplete="current-password" enterkeyhint="go" required {% if error %}autofocus{% endif %}>
+
+				<button type="submit" class="btn btn-primary">Log in</button>
+			</form>
+		</div>
 	</main>
-</body>
-</html>
+{% endblock %}

@@ -1,70 +1,68 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Book a board · Fins Surf Hire</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Fins Surf Hire</p>
-			<h1>Book a board</h1>
-		</div>
-	</header>
+{% extends 'base.html' %}
 
-	<p class="day-summary">
-		<strong>£25</strong> for the day, board only ·
-		<strong>£35</strong> with a wetsuit
-	</p>
+{% block title %}Book a board · Fins Surf Hire{% endblock %}
+
+{% block body %}
+	<section class="page-head">
+		<div class="page-head-inner">
+			<h1 class="display">Book a board</h1>
+			<p class="page-head-sub"><strong>£25</strong> for the day, board only · <strong>£35</strong> with a wetsuit</p>
+		</div>
+	</section>
 
 	<main>
-		{% for message in get_flashed_messages() %}
-			<p class="form-confirm" role="status">{{ message }}</p>
-		{% endfor %}
+		<div class="shell shell-form">
+			{% for message in get_flashed_messages() %}
+				<p class="form-confirm" role="status">{{ message }}</p>
+			{% endfor %}
 
-		<form method="post" action="/book" class="booking-form">
-			<fieldset class="zone">
-				<legend>Your details</legend>
-				<div class="card form-card">
-					<label for="booking-name">Your name</label>
-					<input id="booking-name" type="text" name="name" autocomplete="name" required>
+			{% if error %}
+				<p class="form-error" role="alert">{{ error }}</p>
+			{% endif %}
 
-					<label for="booking-phone">Phone</label>
-					<input id="booking-phone" type="tel" name="phone" autocomplete="tel" required>
+			<form method="post" action="/book" class="booking-form">
+				<div class="booking-form-grid">
+					<fieldset class="zone">
+						<legend>Your details</legend>
+						<div class="card form-card">
+							<label for="booking-name">Your name</label>
+							<input id="booking-name" type="text" name="name" autocomplete="name" required>
 
-					<label for="booking-email">Email <span class="optional">(optional)</span></label>
-					<input id="booking-email" type="email" name="email" autocomplete="email">
+							<label for="booking-phone">Phone</label>
+							<input id="booking-phone" type="tel" name="phone" autocomplete="tel" required>
+
+							<label for="booking-email">Email <span class="optional">(optional)</span></label>
+							<input id="booking-email" type="email" name="email" autocomplete="email">
+						</div>
+					</fieldset>
+
+					<fieldset class="zone">
+						<legend>The hire</legend>
+						<div class="card form-card">
+							<label for="booking-size">Board size</label>
+							<select id="booking-size" name="size_requested" required>
+								<option value="" disabled selected>Choose a size</option>
+								{% for row in sizes %}
+									<option value="{{ row.size }}">{{ row.size }}</option>
+								{% endfor %}
+							</select>
+
+							<label for="booking-date">Which day</label>
+							<input id="booking-date" type="date" name="hire_date" required>
+
+							<label class="wetsuit-choice">
+								<input type="checkbox" name="wetsuit">
+								<span>
+									<strong>Add a wetsuit</strong>
+									<small>£10 more for the day</small>
+								</span>
+							</label>
+						</div>
+					</fieldset>
 				</div>
-			</fieldset>
 
-			<fieldset class="zone">
-				<legend>The hire</legend>
-				<div class="card form-card">
-					<label for="booking-size">Board size</label>
-					<select id="booking-size" name="size_requested" required>
-						<option value="" disabled selected>Choose a size</option>
-						{% for row in sizes %}
-							<option value="{{ row.size }}">{{ row.size }}</option>
-						{% endfor %}
-					</select>
-
-					<label for="booking-date">Which day</label>
-					<input id="booking-date" type="date" name="hire_date" required>
-
-					<label class="wetsuit-choice">
-						<input type="checkbox" name="wetsuit">
-						<span>
-							<strong>Add a wetsuit</strong>
-							<small>£10 more for the day</small>
-						</span>
-					</label>
-				</div>
-			</fieldset>
-
-			<button type="submit" class="btn btn-primary">Book a board</button>
-		</form>
+				<button type="submit" class="btn btn-primary">Book a board</button>
+			</form>
+		</div>
 	</main>
-</body>
-</html>
+{% endblock %}

@@ -1,20 +1,23 @@
-/* Hillend Surf Hire, shared styles. Sandy base, sea blue for headings and labels, coral for actions only, gorse yellow for gentle warnings. */
+/* Fins Surf Hire, shared styles.
+   Crisp white base, sea greens for tint and accent, deep green ink for text.
+   Bricolage Grotesque throughout: extra bold and blocky for display, regular for body. */
+
+@font-face {
+	font-family: "Bricolage Grotesque";
+	src: url("fonts/BricolageGrotesque-latin.woff2") format("woff2");
+	font-weight: 200 800;
+	font-display: swap;
+}
 
 :root {
-	--sand: #F8F3E9;
-	--card: #FFFDF7;
-	--line: #E7DCC7;
-	--line-strong: #D9CEB7;
-	--ink: #24373F;
-	--ink-soft: #64757C;
-	--sea: #3D7A8C;
-	--sea-deep: #2E6272;
-	--foam: #E4EEF0;
-	--coral: #E4705C;
-	--coral-deep: #C85843;
-	--gorse-soft: #F7EBC9;
-	--gorse-line: #E2CC8E;
-	--gorse-deep: #6B4D10;
+	--white: #FFFFFF;
+	--tea: #DDE7C7;
+	--celadon: #BFD8BD;
+	--cambridge: #98C9A3;
+	--mint: #77BFA3;
+	--mint-deep: #2F6B57;
+	--ink: #16261F;
+	--ink-soft: #51625A;
 	--radius: 14px;
 }
 
@@ -24,62 +27,247 @@
 
 body {
 	margin: 0;
-	background: var(--sand);
+	background: var(--white);
 	color: var(--ink);
-	font-family: "Seravek", "Avenir Next", "Trebuchet MS", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-	line-height: 1.5;
+	font-family: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+	line-height: 1.55;
 	-webkit-font-smoothing: antialiased;
 }
 
 a {
-	color: var(--sea-deep);
+	color: var(--mint-deep);
 }
 
-.topbar,
-.day-summary,
-main {
+/* Page shells. Public pages get room on desktop, the counter stays a narrow column. */
+.shell {
 	width: 100%;
-	max-width: 30rem;
+	max-width: 72rem;
 	margin-inline: auto;
 	padding-inline: 1.25rem;
 }
 
-main {
-	padding-bottom: 3.5rem;
+.shell-form {
+	max-width: 56rem;
 }
 
-/* Header with the wave rule, the one decorative flourish */
+.shell-narrow {
+	max-width: 40rem;
+}
+
+.shell-counter {
+	max-width: 32rem;
+}
+
+main {
+	padding-bottom: 4rem;
+}
+
+/* Top bar. The wave rule is the one decorative flourish, now in mint. */
 .topbar {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
-	padding-top: 1.4rem;
-	padding-bottom: 1.2rem;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 4 Q5 0.5 10 4 T20 4 T30 4 T40 4' fill='none' stroke='%233D7A8C' stroke-width='1.5' stroke-linecap='round' opacity='0.45'/%3E%3C/svg%3E");
+	width: 100%;
+	max-width: 72rem;
+	margin-inline: auto;
+	padding: 1.1rem 1.25rem 1rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 4 Q5 0.5 10 4 T20 4 T30 4 T40 4' fill='none' stroke='%2377BFA3' stroke-width='1.5' stroke-linecap='round' opacity='0.55'/%3E%3C/svg%3E");
 	background-repeat: repeat-x;
 	background-position: left bottom;
 	background-size: 40px 8px;
 }
 
+.brand {
+	font-size: 1.35rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	color: var(--ink);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.brand span {
+	font-weight: 500;
+	color: var(--ink-soft);
+}
+
+.site-nav {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.site-nav > a:not(.btn) {
+	padding: 0.5rem 0.7rem;
+	font-weight: 600;
+	font-size: 1rem;
+	color: var(--ink);
+	text-decoration: none;
+	border-radius: 10px;
+	white-space: nowrap;
+}
+
+.site-nav > a:not(.btn):hover {
+	background: var(--tea);
+}
+
+/* On small screens the nav stays to Boards and Hours: every page already
+   carries its own booking button, so the top bar does not need one too */
+.site-nav a.nav-cta {
+	display: none;
+	margin-left: 0.35rem;
+}
+
+@media (min-width: 40rem) {
+	.site-nav a.nav-cta {
+		display: inline-flex;
+		white-space: nowrap;
+	}
+}
+
+/* Display type: the extra bold, blocky headers the site is built around */
+.display {
+	margin: 0;
+	font-size: clamp(2.6rem, 8vw, 6rem);
+	font-weight: 800;
+	line-height: 0.95;
+	letter-spacing: -0.03em;
+}
+
 h1 {
 	margin: 0;
-	font-size: 1.7rem;
-	letter-spacing: -0.01em;
 }
 
-.eyebrow {
-	margin: 0 0 0.15rem;
-	font-size: 0.72rem;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.14em;
-	color: var(--sea);
+.page-title {
+	margin: 1.9rem 0 0;
+	font-size: 2rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
 }
 
-/* Glanceable one-line summary of the day */
+/* Home hero: the photo carries the page, the headline sits on top of it */
+.hero {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: clamp(26rem, 78vh, 44rem);
+	overflow: hidden;
+}
+
+.hero-photo {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(10, 26, 20, 0.72) 0%, rgba(10, 26, 20, 0.28) 45%, rgba(10, 26, 20, 0.08) 100%);
+}
+
+.hero-inner {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 72rem;
+	margin-inline: auto;
+	padding: 2rem 1.25rem 2.6rem;
+	color: var(--white);
+}
+
+.hero-sub {
+	max-width: 30rem;
+	margin: 1.1rem 0 0;
+	font-size: 1.1rem;
+	line-height: 1.55;
+}
+
+.hero .actions {
+	margin-top: 1.5rem;
+}
+
+/* The report strip: prices and hours in one glance, like the chalkboard outside the shop */
+.report-strip {
+	margin: 0;
+	padding: 0.85rem 1.25rem;
+	background: var(--tea);
+	border-block: 1px solid var(--celadon);
+	text-align: center;
+	font-size: 1rem;
+	color: var(--ink-soft);
+}
+
+.report-strip strong {
+	color: var(--ink);
+	font-size: 1.15rem;
+	font-weight: 800;
+}
+
+/* Page heads: big title, with or without a photo band behind it */
+.page-head {
+	padding-top: 1.5rem;
+}
+
+.page-head-inner {
+	width: 100%;
+	max-width: 72rem;
+	margin-inline: auto;
+	padding: 0 1.25rem 1.2rem;
+}
+
+.page-head-sub {
+	margin: 0.5rem 0 0;
+	font-size: 1.05rem;
+	color: var(--ink-soft);
+}
+
+.page-head-sub strong {
+	color: var(--ink);
+}
+
+.page-head-photo {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: clamp(14rem, 38vh, 22rem);
+	padding-top: 0;
+	overflow: hidden;
+}
+
+.page-head-photo-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.page-head-photo::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(10, 26, 20, 0.68) 0%, rgba(10, 26, 20, 0.18) 55%, rgba(10, 26, 20, 0.05) 100%);
+}
+
+.page-head-photo .page-head-inner {
+	position: relative;
+	z-index: 1;
+	color: var(--white);
+}
+
+.page-head-photo .page-head-sub,
+.page-head-photo .page-head-sub strong {
+	color: var(--white);
+}
+
+/* Glanceable one-line summary on the counter */
 .day-summary {
-	margin: 0.9rem auto 0;
+	margin: 1.4rem 0 0;
 	font-size: 0.95rem;
 	color: var(--ink-soft);
 }
@@ -87,6 +275,7 @@ h1 {
 .day-summary strong {
 	color: var(--ink);
 	font-size: 1.05rem;
+	font-weight: 800;
 }
 
 /* Zones */
@@ -101,17 +290,17 @@ h1 {
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.14em;
-	color: var(--sea-deep);
+	color: var(--mint-deep);
 }
 
 /* Cards */
 .card {
-	background: var(--card);
-	border: 1px solid var(--line);
+	background: var(--white);
+	border: 1px solid var(--celadon);
 	border-radius: var(--radius);
 	padding: 1rem 1rem 1.1rem;
 	margin-bottom: 0.8rem;
-	box-shadow: 0 1px 2px rgba(36, 55, 63, 0.05);
+	box-shadow: 0 1px 2px rgba(22, 38, 31, 0.05);
 }
 
 .card-head {
@@ -124,6 +313,8 @@ h1 {
 .card h3 {
 	margin: 0;
 	font-size: 1.25rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 }
 
 .card .size {
@@ -138,10 +329,22 @@ h1 {
 }
 
 .card a {
-	color: var(--sea-deep);
+	color: var(--mint-deep);
 }
 
-/* State chips, never coral: coral is for actions only */
+/* Board catalogue grid */
+.card-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.8rem;
+}
+
+.card-grid .card {
+	height: 100%;
+	margin-bottom: 0;
+}
+
+/* State chips */
 .chip {
 	flex-shrink: 0;
 	display: inline-block;
@@ -155,12 +358,12 @@ h1 {
 
 .chip-out {
 	background: var(--ink);
-	color: var(--sand);
+	color: var(--white);
 }
 
 .chip-sea {
-	background: var(--foam);
-	color: var(--sea-deep);
+	background: var(--tea);
+	color: var(--mint-deep);
 }
 
 /* Buttons, thumb sized */
@@ -168,21 +371,20 @@ h1 {
 	display: block;
 	width: 100%;
 	min-height: 3.25rem;
-	padding: 0.75rem 1rem;
+	padding: 0.75rem 1.2rem;
 	font: inherit;
-	font-weight: 600;
+	font-weight: 700;
 	font-size: 1.05rem;
 	border: none;
 	border-radius: 12px;
 	cursor: pointer;
-	transition: transform 0.06s ease, background-color 0.15s ease;
+	transition: transform 0.06s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .btn:active {
 	transform: translateY(1px);
 }
 
-/* Links dressed as buttons keep the same shape and centring */
 a.btn {
 	display: inline-flex;
 	align-items: center;
@@ -191,13 +393,13 @@ a.btn {
 }
 
 .btn-primary {
-	background: var(--coral);
-	color: #FFFFFF;
-	box-shadow: 0 2px 6px rgba(200, 88, 67, 0.25);
+	background: var(--mint);
+	color: var(--ink);
+	box-shadow: 0 2px 6px rgba(47, 107, 87, 0.22);
 }
 
 .btn-primary:hover {
-	background: var(--coral-deep);
+	background: var(--cambridge);
 }
 
 .btn-quiet {
@@ -206,9 +408,34 @@ a.btn {
 	min-height: 2.75rem;
 	padding: 0.4rem 1.15rem;
 	background: transparent;
-	border: 1.5px solid var(--line-strong);
+	border: 1.5px solid var(--celadon);
 	border-radius: 999px;
 	color: var(--ink);
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+.btn-quiet:hover {
+	border-color: var(--cambridge);
+}
+
+/* Ghost button for use on photos only */
+.btn-ghost {
+	background: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.85);
+	color: var(--white);
+}
+
+.btn-ghost:hover {
+	background: rgba(255, 255, 255, 0.14);
+}
+
+/* Buttons in the nav stay compact */
+.site-nav .btn {
+	display: inline-flex;
+	width: auto;
+	min-height: 2.75rem;
+	padding: 0.45rem 1.15rem;
 	font-size: 0.95rem;
 }
 
@@ -232,8 +459,8 @@ a.btn {
 	font: inherit;
 	font-size: 1.05rem;
 	color: var(--ink);
-	background: #FFFFFF;
-	border: 1.5px solid var(--line-strong);
+	background: var(--white);
+	border: 1.5px solid var(--celadon);
 	border-radius: 12px;
 }
 
@@ -263,6 +490,12 @@ fieldset.zone legend + * {
 	margin-top: 1.5rem;
 }
 
+.booking-form-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0 1.5rem;
+}
+
 .form-card .optional {
 	font-weight: 400;
 	font-size: 0.85rem;
@@ -276,8 +509,8 @@ fieldset.zone legend + * {
 	gap: 0.85rem;
 	margin: 1.25rem 0 0;
 	padding: 0.95rem 1rem;
-	background: #FFFFFF;
-	border: 1.5px solid var(--line-strong);
+	background: var(--white);
+	border: 1.5px solid var(--celadon);
 	border-radius: 12px;
 	cursor: pointer;
 }
@@ -288,17 +521,17 @@ fieldset.zone legend + * {
 	min-height: 0;
 	margin: 0;
 	flex-shrink: 0;
-	accent-color: var(--sea);
+	accent-color: var(--mint-deep);
 }
 
 .form-card .wetsuit-choice:has(input:checked) {
-	background: var(--foam);
-	border-color: var(--sea);
+	background: var(--tea);
+	border-color: var(--cambridge);
 }
 
 .wetsuit-choice strong {
 	display: block;
-	font-weight: 600;
+	font-weight: 700;
 	font-size: 1.05rem;
 }
 
@@ -314,22 +547,23 @@ fieldset.zone legend + * {
 input:focus-visible,
 select:focus-visible,
 a:focus-visible {
-	outline: 3px solid var(--sea);
+	outline: 3px solid var(--mint-deep);
 	outline-offset: 2px;
 }
 
-/* Log in page. Gorse tint flags a failed attempt without sounding an alarm, coral stays reserved for the button. */
+/* Log in page */
 .login-form {
-	margin-top: 1.9rem;
+	margin-top: 1.4rem;
 }
 
+/* Messages. Tea and celadon carry both, coral is gone: green is the house colour now. */
 .form-error {
 	margin: 1.6rem 0 0;
 	padding: 0.85rem 1.05rem;
-	background: var(--gorse-soft);
-	border: 1.5px solid var(--gorse-line);
+	background: #F7EBC9;
+	border: 1.5px solid #E2CC8E;
 	border-radius: var(--radius);
-	color: var(--gorse-deep);
+	color: #6B4D10;
 	font-size: 0.98rem;
 }
 
@@ -337,26 +571,21 @@ a:focus-visible {
 	margin-top: 0.9rem;
 }
 
-/* Booking confirmation, flashed after a successful booking. Foam and sea read as good news, coral stays reserved for the button. */
 .form-confirm {
 	margin: 1.6rem 0 0;
 	padding: 0.85rem 1.05rem;
-	background: var(--foam);
-	border: 1.5px solid var(--sea);
+	background: var(--tea);
+	border: 1.5px solid var(--cambridge);
 	border-radius: var(--radius);
-	color: var(--sea-deep);
+	color: var(--mint-deep);
 	font-size: 0.98rem;
-}
-
-.form-confirm + .booking-form fieldset.zone:first-of-type {
-	margin-top: 1.1rem;
 }
 
 /* Empty states give direction, not mood */
 .empty {
 	margin: 0 0 0.8rem;
 	padding: 1.15rem 1rem;
-	border: 1.5px dashed var(--line-strong);
+	border: 1.5px dashed var(--celadon);
 	border-radius: var(--radius);
 	text-align: center;
 	color: var(--ink-soft);
@@ -364,19 +593,19 @@ a:focus-visible {
 
 /* Public pages */
 .lead {
-	margin: 1.9rem 0 0;
-	font-size: 1.15rem;
+	max-width: 44rem;
+	margin: 2.2rem 0 0;
+	font-size: 1.2rem;
 	line-height: 1.55;
 }
 
 .actions {
 	display: grid;
 	gap: 0.8rem;
-	margin-top: 1.5rem;
 }
 
 .note {
-	margin: 1.8rem 0 0;
+	margin: 1.4rem 0 0;
 	color: var(--ink-soft);
 }
 
@@ -396,7 +625,7 @@ a:focus-visible {
 }
 
 .card-link:hover .card {
-	border-color: var(--sea);
+	border-color: var(--mint);
 }
 
 .card-link:active .card {
@@ -405,7 +634,7 @@ a:focus-visible {
 
 .price {
 	flex-shrink: 0;
-	font-weight: 700;
+	font-weight: 800;
 	font-size: 1.05rem;
 }
 
@@ -415,7 +644,7 @@ a:focus-visible {
 	color: var(--ink-soft);
 }
 
-/* Single board spec list */
+/* Single board page */
 .spec {
 	margin: 0;
 }
@@ -425,7 +654,7 @@ a:focus-visible {
 	align-items: baseline;
 	justify-content: space-between;
 	padding: 0.55rem 0;
-	border-bottom: 1px solid var(--line);
+	border-bottom: 1px solid var(--tea);
 }
 
 .spec div:last-child {
@@ -442,15 +671,29 @@ a:focus-visible {
 	font-size: 1.15rem;
 }
 
-.spec + .btn {
+.board-detail-cta {
+	display: grid;
+	gap: 0.8rem;
+	justify-items: start;
 	margin-top: 1rem;
 }
 
+.board-detail-cta .btn-primary {
+	width: 100%;
+}
+
 /* Opening hours and contact */
+.split {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0 1.5rem;
+}
+
 .card .opening {
 	margin: 0 0 0.3rem;
 	color: var(--ink);
 	font-size: 1.2rem;
+	font-weight: 700;
 }
 
 .card address {
@@ -470,6 +713,55 @@ a:focus-visible {
 .card address a {
 	display: inline-block;
 	padding: 0.3rem 0;
+}
+
+/* Desktop */
+@media (min-width: 48rem) {
+	.actions {
+		grid-auto-flow: column;
+		justify-content: start;
+	}
+
+	.actions .btn {
+		width: auto;
+		padding-inline: 1.8rem;
+	}
+
+	.card-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.booking-form-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.split {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.booking-form > .btn {
+		width: auto;
+		padding-inline: 2.4rem;
+	}
+
+	.page-cta {
+		width: auto;
+		padding-inline: 2.4rem;
+	}
+
+	.hero-sub {
+		font-size: 1.2rem;
+	}
+
+	.report-strip strong {
+		font-size: 1.25rem;
+	}
+}
+
+@media (min-width: 72rem) {
+	.card-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {

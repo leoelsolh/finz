@@ -1,38 +1,38 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Opening hours · Fins Surf Hire</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Fins Surf Hire</p>
-			<h1>Opening hours</h1>
+{% extends 'base.html' %}
+
+{% block title %}Opening hours · Fins Surf Hire{% endblock %}
+
+{% block body %}
+	<section class="page-head page-head-photo">
+		<img class="page-head-photo-img" src="{{ url_for('static', filename='img/hours.jpg') }}" alt="A quiet beach at golden hour with foam washing up the sand">
+		<div class="page-head-inner">
+			<h1 class="display">Opening hours</h1>
+			<p class="page-head-sub">Where we are and when the boards are out</p>
 		</div>
-		<a class="btn btn-quiet" href="/">Home</a>
-	</header>
+	</section>
 
 	<main>
-		<div class="zone">
-			<article class="card">
-				<p class="opening">We are open from 9am until 6pm.</p>
-				<p>Times may vary depending on the date, but boards are generally accessible throughout the summer season.</p>
-			</article>
-		</div>
+		<div class="shell">
+			<div class="split">
+				<div class="zone">
+					<h2>Hours</h2>
+					<article class="card">
+						<p class="opening">We are open from 9am until 6pm.</p>
+						<p>Times may vary depending on the date, but boards are generally accessible throughout the summer season.</p>
+					</article>
+				</div>
 
-		<section class="zone">
-			<h2>Contact us</h2>
-			<article class="card">
-				<address>
-					<p>Hillend Campsite 11 456</p>
-					<p><a href="tel:+4460201020">+44 6020 1020</a></p>
-					<p><a href="mailto:hillend@gmail.com">hillend@gmail.com</a></p>
-				</address>
-			</article>
-		</section>
+				<section class="zone">
+					<h2>Contact us</h2>
+					<article class="card">
+						<address>
+							<p>Hillend Campsite 11 456</p>
+							<p><a href="tel:+4460201020">+44 6020 1020</a></p>
+							<p><a href="mailto:finssurfhire@gmail.com">finssurfhire@gmail.com</a></p>
+						</address>
+					</article>
+				</section>
+			</div>
+		</div>
 	</main>
-</body>
-</html>
+{% endblock %}

@@ -1,42 +1,37 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>The boards · Fins Surf Hire</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Fins Surf Hire</p>
-			<h1>The boards</h1>
-		</div>
-		<a class="btn btn-quiet" href="/">Home</a>
-	</header>
+{% extends 'base.html' %}
 
-	<p class="day-summary">
-		<strong>{{ board_stock|length }}</strong> board{% if board_stock|length != 1 %}s{% endif %} to choose from
-	</p>
+{% block title %}The boards · Fins Surf Hire{% endblock %}
+
+{% block body %}
+	<section class="page-head page-head-photo">
+		<img class="page-head-photo-img" src="{{ url_for('static', filename='img/boards.jpg') }}" alt="A surfer in a wetsuit dropping into a dark green wave">
+		<div class="page-head-inner">
+			<h1 class="display">The boards</h1>
+			<p class="page-head-sub"><strong>{{ board_stock|length }}</strong> board{% if board_stock|length != 1 %}s{% endif %} to choose from</p>
+		</div>
+	</section>
 
 	<main>
-		<section class="zone">
-			<h2>All boards</h2>
-			{% for board in board_stock %}
-				<a class="card-link" href="/boards/{{ board.id }}">
-					<article class="card">
-						<div class="card-head">
-							<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
-							<span class="price">£{{ board.price }} <small>a day</small></span>
-						</div>
-					</article>
-				</a>
-			{% else %}
-				<p class="empty">No boards listed just now.</p>
-			{% endfor %}
-		</section>
+		<div class="shell">
+			<section class="zone">
+				<h2>All boards</h2>
+				<div class="card-grid">
+					{% for board in board_stock %}
+						<a class="card-link" href="/boards/{{ board.id }}">
+							<article class="card">
+								<div class="card-head">
+									<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
+									<span class="price">£{{ board.price }} <small>a day</small></span>
+								</div>
+							</article>
+						</a>
+					{% else %}
+						<p class="empty">No boards listed just now.</p>
+					{% endfor %}
+				</div>
+			</section>
 
-		<a class="btn btn-primary page-cta" href="/book">Book a board</a>
+			<a class="btn btn-primary page-cta" href="/book">Book a board</a>
+		</div>
 	</main>
-</body>
-</html>
+{% endblock %}
