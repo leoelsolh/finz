@@ -12,10 +12,39 @@ try:
     with sqlite3.connect("rental.db") as database:
         cursor = database.cursor()
         boards = [
-            ("Swirl", "8'0", 50),
-            ("Hardboard", "6'5", 80),
-            ("Oz", "9'0", 60),
-            ("Max", "9'0", 60),
+            ("Tidal", "8'0", 25),
+            ("Tidal", "8'0", 25),
+            ("Tidal", "8'0", 25),
+            ("Tidal", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+            ("Ryd", "8'0", 25),
+
+            ("Oz", "9'0", 25),
+            ("Tidal", "9'0", 25),
+            ("Tidal", "9'0", 25),
+            ("Tidal", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+            ("Ryd", "9'0", 25),
+
+            
         ]
         cursor.executemany('''INSERT INTO boards (name, size, price) VALUES (?, ?, ?)''', boards)
         today = datetime.datetime.now().strftime("%Y-%m-%d")

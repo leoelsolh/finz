@@ -9,10 +9,11 @@ def init_db():
 
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS boards (
-                    id    INTEGER PRIMARY KEY,
-                    name  TEXT,
-                    size  TEXT,
-                    price INTEGER
+                    damaged INTEGER DEFAULT 0,
+                    id     INTEGER PRIMARY KEY,
+                    name   TEXT,
+                    size   TEXT,
+                    price  INTEGER
                 )
             ''')
             cursor.execute('''
@@ -32,7 +33,8 @@ def init_db():
                     board_id    INTEGER,
                     name_booked TEXT,
                     went_out    TEXT,
-                    came_back   TEXT
+                    came_back   TEXT,
+                    damage_note TEXT
                 )
             ''')
 

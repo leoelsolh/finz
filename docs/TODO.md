@@ -1,12 +1,10 @@
 # TODO
 
 #### [ Now ]
-- [ ] Fix exception-swallowing bug
+- [ ] Damage flag on board return.
+- [ ] Split DB helpers into db.py once main.py gets unwieldy
 
 #### [ Next ] 
-- [ ] Sharpen the shell scripts.
-- [ ] Damage flag on board return. She needs to record a missing fin
-- [ ] Split DB helpers into db.py once main.py gets unwieldy
 
 #### [ Bugs ]
 

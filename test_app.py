@@ -6,7 +6,7 @@ import pytest
 import config
 from main import app
 from main import login_attempts
-from main import get_all_boards
+from db import get_all_boards
 
 @pytest.fixture
 def client():
