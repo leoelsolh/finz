@@ -6,7 +6,6 @@ import logging
 from zoneinfo import ZoneInfo
 
 import config
-import main
 
 class DatabaseError(Exception):
     '''Raised when a database operation fails.'''
@@ -95,7 +94,7 @@ def get_available_boards():
 # Admin logic
 def mark_board_out(board_id, renter_name):
     try:
-        with main.get_connection() as connection:
+        with get_connection() as connection:
             cursor = connection.cursor()
             
             went_out = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')

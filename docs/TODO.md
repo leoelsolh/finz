@@ -2,7 +2,7 @@
 
 #### [ Now ]
 - [ ] Damage flag on board return.
-- [ ] Split DB helpers into db.py once main.py gets unwieldy
+- [ ] Model change: stock by type, not individual boards
 
 #### [ Next ] 
 

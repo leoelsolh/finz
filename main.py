@@ -19,7 +19,8 @@ import schema
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
-app.permanent_session_lifetime = datetime.timedelta(hours=8)
+app.config['SESSION_COOKIE_SAMESITE'] = config.SESSION_COOKIE_SAMESITE
+app.permanent_session_lifetime = datetime.timedelta(hours=config.SESSION_LIFETIME_HOURS)
 logging.basicConfig(level=logging.INFO)
 
 schema.init_db() #Init database tables
@@ -53,11 +54,11 @@ def admin_login():
     if request.method == 'POST':
         ip = request.remote_addr
         now = time.time()
-        recent = [attempt for attempt in login_attempts.get(ip, []) if now - attempt < 3600]
+        recent = [attempt for attempt in login_attempts.get(ip, []) if now - attempt < config.LOGIN_WINDOW_SECONDS]
         login_attempts[ip] = recent 
 
         # Ratelimit logic
-        if len(recent) >= 5:
+        if len(recent) >= config.MAX_LOGIN_ATTEMPTS:
             return render_template('login.html', error='Too many attempts. Try again later.'), 429
 
         username = request.form['username']

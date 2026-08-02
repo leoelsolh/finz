@@ -1,4 +1,5 @@
 # Test Enviornment
+import os
 import time
 import datetime
 import pytest
@@ -50,7 +51,7 @@ def test_failed_login(client):
     assert invalid_response.status_code == 401
 
 def test_successful_login(client):
-    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD}) 
+    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.(ADMIN_PASSWORD)}) 
     assert response.status_code == 302
 
     response = client.get('/admin')
