@@ -18,6 +18,7 @@
 			{% endif %}
 
 			<form name="login_form" method="post" action="/admin/login" class="card form-card login-form">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 				<label for="username">Username</label>
 				<input id="username" type="text" name="username" value="{{ request.form.get('username', '') }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {% if not error %}autofocus{% endif %}>
 

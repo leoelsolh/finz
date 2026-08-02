@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 import time
+import hmac
+import secrets
 import logging
 import datetime
 
@@ -26,6 +28,15 @@ logging.basicConfig(level=logging.INFO)
 schema.init_db() #Init database tables
 login_attempts = {}
 
+def get_csrf_token():
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_urlsafe(32)
+    return session['csrf_token']
+
+@app.context_processor
+def inject_csrf_token():
+    return {'csrf_token': get_csrf_token()}
+
 # Site logic
 @app.before_request
 def check_auth_session(): #Preproccessing
@@ -35,6 +46,15 @@ def check_auth_session(): #Preproccessing
 
         if not session.get('name'):
             return redirect(url_for('admin_login'))
+
+@app.before_request
+def check_csrf_token():
+    if request.method == 'POST':
+        token = session.get('csrf_token')
+        form_token = request.form.get('csrf_token')
+
+        if not token or not form_token or not hmac.compare_digest(token, form_token):
+            abort(403)
 
 @app.errorhandler(db.DatabaseError)
 def handle_database_error(error):
@@ -72,6 +92,7 @@ def admin_login():
             login_attempts.pop(ip, None)
             session.permanent = True
             session['name'] = username 
+
             return redirect(url_for('admin'))
 
         login_attempts[ip].append(now)

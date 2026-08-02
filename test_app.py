@@ -1,5 +1,4 @@
 # Test Enviornment
-import os
 import time
 import datetime
 import pytest
@@ -9,10 +8,14 @@ from main import app
 from main import login_attempts
 from db import get_all_boards
 
+CSRF = 'test_token'
+
 @pytest.fixture
 def client():
     login_attempts.clear()
     with app.test_client() as client:
+        with client.session_transaction() as sesh:
+            sesh['csrf_token'] = CSRF
         yield client
 
 # Test page-loads
@@ -41,17 +44,17 @@ def test_index_loads(client):
 # Test site functions
 def test_login_lockout(client):
     for _ in range(5):
-        invalid_response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
+        invalid_response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong', 'csrf_token': CSRF})
         assert invalid_response.status_code == 401
-    blocked = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
+    blocked = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong', 'csrf_token': CSRF})
     assert blocked.status_code == 429
 
 def test_failed_login(client):
-    invalid_response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong'})
+    invalid_response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong', 'csrf_token': CSRF})
     assert invalid_response.status_code == 401
 
 def test_successful_login(client):
-    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD}) 
+    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD, 'csrf_token': CSRF}) 
     assert response.status_code == 302
 
     response = client.get('/admin')
@@ -60,7 +63,7 @@ def test_successful_login(client):
 def test_expired_session(client, monkeypatch):
     monkeypatch.setattr(app, 'permanent_session_lifetime', datetime.timedelta(seconds=1))
 
-    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD})
+    response = client.post('/admin/login', data={'username': config.ADMIN_USER, 'password': config.ADMIN_PASSWORD, 'csrf_token': CSRF})
     assert response.status_code == 302 
     
     response = client.get('/admin')
@@ -70,6 +73,10 @@ def test_expired_session(client, monkeypatch):
 
     response = client.get('/admin')
     assert response.status_code == 302 
+
+def test_csrf_rejection(client):
+    rejection = client.post('/admin/login', data={'username': 'x', 'password': 'y'})
+    assert rejection.status_code == 403
 
 
 # Test database functions

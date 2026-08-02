@@ -21,6 +21,7 @@
 			{% endif %}
 
 			<form method="post" action="/book" class="booking-form">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 				<div class="booking-form-grid">
 					<fieldset class="zone">
 						<legend>Your details</legend>

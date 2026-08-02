@@ -6,6 +6,7 @@
 	<header class="topbar">
 		<a class="brand" href="/admin">Fins <span>Counter</span></a>
 		<form method="post" action="/admin/logout">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 			<button type="submit" class="btn btn-quiet">Log out</button>
 		</form>
 	</header>
@@ -30,6 +31,7 @@
 						</div>
 						<p>With {{ rental.name_booked }} since {{ rental.went_out[11:16] }}</p>
 						<form method="post" action="/admin/return">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 							<input type="hidden" name="board_id" value="{{ rental.board_id }}">
 							<button type="submit" class="btn btn-primary">Mark as returned</button>
 						</form>
@@ -61,6 +63,7 @@
 				<h2>Send a board out</h2>
 				{% if board_stock %}
 					<form method="post" action="/admin/out" class="card form-card">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 						<label for="board-select">Which board</label>
 						<select id="board-select" name="board_id">
 							{% for board in board_stock %}
