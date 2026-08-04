@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Counter · Fins Surf Hire{% endblock %}
+{% block title %}Counter · Finz Surf Hire{% endblock %}
 
 {% block header %}
 	<header class="topbar">
-		<a class="brand" href="/admin">Fins <span>Counter</span></a>
+		<a class="brand" href="/admin">Finz <span>Counter</span></a>
 		<form method="post" action="/admin/logout">
 			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 			<button type="submit" class="btn btn-quiet">Log out</button>
@@ -33,7 +33,7 @@
 						<form method="post" action="/admin/return">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 							<input type="hidden" name="board_id" value="{{ rental.board_id }}">
-							<button type="submit" class="btn btn-primary">Mark as returned</button>
+							<button type="submit" class="btn">Mark as returned</button>
 						</form>
 					</article>
 				{% else %}
@@ -72,7 +72,7 @@
 						</select>
 						<label for="renter-name">Who is taking it</label>
 						<input id="renter-name" name="renter_name" autocomplete="off">
-						<button type="submit" class="btn btn-primary">Mark out</button>
+						<button type="submit" class="btn">Mark out</button>
 					</form>
 				{% else %}
 					<p class="empty">Every board is out. Mark one as returned first.</p>
@@ -81,3 +81,5 @@
 		</div>
 	</main>
 {% endblock %}
+
+{% block footer %}{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Book a board · Fins Surf Hire{% endblock %}
+{% block title %}Book a board · Finz Surf Hire{% endblock %}
 
 {% block body %}
 	<section class="page-head">
@@ -25,11 +25,11 @@
 				<div class="booking-form-grid">
 					<fieldset class="zone">
 						<legend>Your details</legend>
-						<div class="card form-card">
-							<label for="booking-name">Your name</label>
+						<div class="form-card">
+							<label for="booking-name">Your name *</label>
 							<input id="booking-name" type="text" name="name" autocomplete="name" required>
 
-							<label for="booking-phone">Phone</label>
+							<label for="booking-phone">Phone *</label>
 							<input id="booking-phone" type="tel" name="phone" autocomplete="tel" required>
 
 							<label for="booking-email">Email <span class="optional">(optional)</span></label>
@@ -39,8 +39,8 @@
 
 					<fieldset class="zone">
 						<legend>The hire</legend>
-						<div class="card form-card">
-							<label for="booking-size">Board size</label>
+						<div class="form-card">
+							<label for="booking-size">Board size *</label>
 							<select id="booking-size" name="size_requested" required>
 								<option value="" disabled selected>Choose a size</option>
 								{% for row in sizes %}
@@ -48,7 +48,7 @@
 								{% endfor %}
 							</select>
 
-							<label for="booking-date">Which day</label>
+							<label for="booking-date">Which day *</label>
 							<input id="booking-date" type="date" name="hire_date" required>
 
 							<label class="wetsuit-choice">
@@ -62,7 +62,7 @@
 					</fieldset>
 				</div>
 
-				<button type="submit" class="btn btn-primary">Book a board</button>
+				<button type="submit" class="btn">Book a board</button>
 			</form>
 		</div>
 	</main>

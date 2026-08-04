@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Log in · Fins Surf Hire{% endblock %}
+{% block title %}Log in · Finz Surf Hire{% endblock %}
 
 {% block header %}
 	<header class="topbar">
-		<a class="brand" href="/">Fins <span>Surf Hire</span></a>
+		<a class="brand" href="/">Finz</a>
 	</header>
 {% endblock %}
 
@@ -17,7 +17,7 @@
 				<p class="form-error" role="alert">{{ error }}</p>
 			{% endif %}
 
-			<form name="login_form" method="post" action="/admin/login" class="card form-card login-form">
+			<form name="login_form" method="post" action="/admin/login" class="form-card login-form">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 				<label for="username">Username</label>
 				<input id="username" type="text" name="username" value="{{ request.form.get('username', '') }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {% if not error %}autofocus{% endif %}>
@@ -25,8 +25,10 @@
 				<label for="password">Password</label>
 				<input id="password" type="password" name="password" autocomplete="current-password" enterkeyhint="go" required {% if error %}autofocus{% endif %}>
 
-				<button type="submit" class="btn btn-primary">Log in</button>
+				<button type="submit" class="btn">Log in</button>
 			</form>
 		</div>
 	</main>
 {% endblock %}
+
+{% block footer %}{% endblock %}

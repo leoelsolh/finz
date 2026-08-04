@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact · Finz Surf Hire{% endblock %}
+
+{% block body %}
+	<main>
+		<div class="shell shell-narrow">
+			<h1 class="page-title">Contact</h1>
+
+			<form method="post" action="/contact" class="form-card contact-form">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+				<label for="contact-first-name">First Name *</label>
+				<input id="contact-first-name" type="text" name="first_name" autocomplete="given-name" required>
+
+				<label for="contact-last-name">Last Name *</label>
+				<input id="contact-last-name" type="text" name="last_name" autocomplete="family-name" required>
+
+				<label for="contact-email">Email *</label>
+				<input id="contact-email" type="email" name="email" autocomplete="email" required>
+
+				<label for="contact-message">Message</label>
+				<textarea id="contact-message" name="message" rows="3"></textarea>
+
+				<button type="submit" class="btn">Send</button>
+			</form>
+		</div>
+	</main>
+{% endblock %}

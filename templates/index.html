@@ -1,30 +1,65 @@
 {% extends 'base.html' %}
 
-{% block title %}Fins Surf Hire · Surfboards by the day{% endblock %}
+{% block title %}Finz Surf Hire · Llangennith{% endblock %}
 
 {% block body %}
 	<section class="hero">
 		<img class="hero-photo" src="{{ url_for('static', filename='img/hero.jpg') }}" alt="A surfer riding inside a breaking turquoise wave">
 		<div class="hero-inner">
-			<h1 class="display">Boards<br>by the day</h1>
-			<p class="hero-sub">Surfboard hire at Hillend on the Gower. Pick a board, add a wetsuit if you need one, and it is yours until six.</p>
+			<h1 class="display">Surf Hire . Llangennith</h1>
+			<p class="hero-sub">Simple, relaxed hire right by the beach.</p>
 			<div class="actions">
-				<a class="btn btn-primary" href="/book">Book a board</a>
-				<a class="btn btn-ghost" href="/boards">See the boards</a>
+				<a class="btn" href="/book">Reserve</a>
 			</div>
 		</div>
 	</section>
 
-	<p class="report-strip">
-		<strong>£25</strong> board for the day ·
-		<strong>£35</strong> with a wetsuit ·
-		open <strong>9am to 6pm</strong>
-	</p>
+	<div class="marquee" aria-hidden="true">
+		<div class="marquee-track">
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			<span>friends with finz</span>
+			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+		</div>
+	</div>
 
 	<main>
 		<div class="shell">
-			<p class="lead">Fins is at Hillend on the Gower peninsula in Wales, known for its beaches and gentle beginner surf. Book online and your board is waiting at the shop, no phone call needed.</p>
-			<p class="note">See our <a href="/hours">opening hours and how to find us</a>.</p>
+			<h2>Important information:</h2>
+			<p class="lead">Find us at <strong>Hillend Campsite</strong>, just a short walk from the beach. We offer day rentals of surfboards, wetsuits, and body boards. Our standard hire hours are <strong>9am-7pm</strong>. Later return times available for an additional charge.</p>
+			<p class="lead">Please see the price list below for available equipment and rental prices.</p>
+			<p class="lead">Equipment is hired at customers' own risk. Loss or damage must be paid for.</p>
 		</div>
 	</main>
+
+	<section class="navy-band">
+		<div class="price-list">
+			<div class="price-row">
+				<p class="price-item">Board Hire</p>
+				<span class="price-amount">£25 Per Day</span>
+			</div>
+			<div class="price-row">
+				<p class="price-item">Board and Wetsuit Hire</p>
+				<span class="price-amount">£35 Per Day</span>
+			</div>
+			<div class="price-row">
+				<p class="price-item">Open</p>
+				<span class="price-amount">9am to 7pm</span>
+			</div>
+		</div>
+	</section>
+
+	<section class="gallery">
+		<img src="{{ url_for('static', filename='img/hero.jpg') }}" alt="">
+		<img src="{{ url_for('static', filename='img/boards.jpg') }}" alt="">
+		<img src="{{ url_for('static', filename='img/hours.jpg') }}" alt="">
+	</section>
 {% endblock %}
