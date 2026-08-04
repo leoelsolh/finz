@@ -5,48 +5,23 @@
 #
 import sqlite3
 import datetime
+import config
 import schema
 schema.init_db()
 
 try:
-    with sqlite3.connect("rental.db") as database:
+    with sqlite3.connect(config.DB_PATH) as database:
         cursor = database.cursor()
         boards = [
-            ("Tidal", "8'0", 25),
-            ("Tidal", "8'0", 25),
-            ("Tidal", "8'0", 25),
-            ("Tidal", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-            ("Ryd", "8'0", 25),
-
-            ("Oz", "9'0", 25),
-            ("Tidal", "9'0", 25),
-            ("Tidal", "9'0", 25),
-            ("Tidal", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-            ("Ryd", "9'0", 25),
-
-            
+            ("Ryd", "8'0", 25, 14),
+            ("Tidal", "8'0", 25, 4),
+            ("Ryd", "9'0", 25, 8),
+            ("Tidal", "9'0", 25, 3),
+            ("Oz", "9'0", 25, 1),
         ]
-        cursor.executemany('''INSERT INTO boards (name, size, price) VALUES (?, ?, ?)''', boards)
+            
+        
+        cursor.executemany('''INSERT INTO boards (name, size, price, quantity) VALUES (?, ?, ?, ?)''', boards)
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         bookings = [
             ("Sophie Reece", "07700 900111", "sophie@example.com", 1, today, "8'0"),

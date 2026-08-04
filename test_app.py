@@ -6,7 +6,6 @@ import pytest
 import config
 from main import app
 from main import login_attempts
-from db import get_all_boards
 
 CSRF = 'test_token'
 
@@ -19,10 +18,6 @@ def client():
         yield client
 
 # Test page-loads
-def test_board_loads(client):
-    load = client.get('/boards')
-    assert load.status_code == 200
-
 def test_admin_redirects(client):
     load = client.get('/admin')
     assert load.status_code == 302
@@ -40,6 +35,17 @@ def test_index_loads(client):
     load = client.get('/')
     assert load.status_code == 200
 
+def test_contact_loads(client):
+    load = client.get('/contact')
+    assert load.status_code == 200
+
+def test_ourwork_loads(client):
+    load = client.get('/ourwork')
+    assert load.status_code == 200
+
+def test_about_loads(client):
+    load = client.get('/about')
+    assert load.status_code == 200
 
 # Test site functions
 def test_login_lockout(client):
@@ -83,9 +89,3 @@ def test_csrf_rejection(client):
 def test_db_connection():
     #TODO: write a connection test.
     pass
-
-def test_get_all_boards(init_test_db):
-    boards = get_all_boards()
-    assert boards is not None
-    assert len(boards) >= 1
-    assert boards[0]['name'] is not None

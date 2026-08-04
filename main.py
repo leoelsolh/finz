@@ -85,7 +85,7 @@ def admin_login():
         password = request.form['password']
  
         # Success logic
-        username_ok = username == config.ADMIN_USER
+        username_ok = hmac.compare_digest(username, config.ADMIN_USER)
         password_ok = check_password_hash(config.ADMIN_HASH, password)
 
         if username_ok and password_ok:
@@ -123,18 +123,6 @@ def admin_out(): #mark a board as gone out
 def index():
     return render_template('index.html')
 
-@app.route('/boards')
-def boards(): #disaply all boards
-    board_stock = db.get_all_boards()
-    return render_template('boards.html', board_stock=board_stock)
-
-@app.route('/boards/<int:board_id>')
-def show_board(board_id): #view single board by its ID
-    board = db.get_board_by_id(board_id)
-    if board is None:
-        abort(404)
-    return render_template('board.html', board=board)
-
 @app.route('/book', methods=['GET', 'POST'])
 def booking(): #book a board
     if request.method == 'POST':
@@ -163,9 +151,21 @@ def booking(): #book a board
         sizes = db.get_board_sizes()
         return render_template('book.html', sizes=sizes)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/ourwork')
+def our_work():
+    return render_template('our_work.html')
+
 @app.route('/hours')
 def hours():
     return render_template('hours.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 # main
 if __name__ == '__main__': 

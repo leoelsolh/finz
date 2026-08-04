@@ -1,19 +1,24 @@
 #!/usr/bin/python3
+#       __Database Populator__ 
+#
+# this script builds the database tables
+# before they are populated by 'seed.py'
 import sqlite3
 from config import DB_PATH
 
 def init_db():
     try:
         with sqlite3.connect(DB_PATH) as database:
-            cursor = database.cursor()
+            cursor = database.cursor()     
 
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS boards (
-                    damaged INTEGER DEFAULT 0,
-                    id     INTEGER PRIMARY KEY,
-                    name   TEXT,
-                    size   TEXT,
-                    price  INTEGER
+                    id       INTEGER PRIMARY KEY,
+                    name     TEXT,
+                    size     TEXT,
+                    price    INTEGER,
+                    quantity  INTEGER,
+                    damaged_count INTEGER DEFAULT 0
                 )
             ''')
             cursor.execute('''
@@ -22,7 +27,7 @@ def init_db():
                     name        TEXT,
                     phone       TEXT,
                     email       TEXT,
-                    wetsuit     INTEGER,
+                    wetsuit     INTEGER, 
                     hire_date    TEXT,
                     size_requested TEXT
                 )
