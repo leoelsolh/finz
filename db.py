@@ -68,12 +68,13 @@ def get_available_boards():
             cursor = connection.cursor()
 
             cursor.execute('''
-                SELECT * FROM boards
-                WHERE id NOT IN (
-                    SELECT board_id FROM rentals 
-                    WHERE came_back IS NULL
-                    AND date(went_out) = date('now')
-                )
+                SELECT id, name, size, price, 
+                    quantity - damaged_count - (
+                        SELECT COUNT(*) FROM rentals
+                        WHERE rentals.board_id = boards.id
+                        AND came_back IS NULL
+                    ) AS available
+                FROM boards
             ''')
             return cursor.fetchall()
 
@@ -99,15 +100,22 @@ def mark_board_out(board_id, renter_name):
         logging.exception('Failed to mark board out')
         raise DatabaseError('Could not mark board out') from sql_error
 
-def mark_board_in(board_id, damaged, damage_note):
+def mark_board_in(board_id, damaged=0, damage_note=None):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
 
             came_back = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
-                UPDATE rentals SET came_back = ? WHERE board_id = ? AND came_back IS NULL
-                ''', (came_back, board_id))
+                UPDATE rentals SET came_back = ?, damaged_note = ?
+                WHERE board_id = ? AND came_back IS NULL
+            ''', (came_back, damage_note, board_id))
+
+            if damaged:
+                cursor.execute('''
+                    UPDATE boards SET damages_count = damaged_count + 1 WHERE id = ?
+                ''', (board_id,))
+
             connection.commit()
 
     except sqlite3.Error as sql_error:
