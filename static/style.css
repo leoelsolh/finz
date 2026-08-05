@@ -674,6 +674,44 @@ legend {
 	margin: 1.8rem 0 0;
 }
 
+/* Damage flag on the return form. Clean returns are the common case,
+   so the note field only appears once the box is ticked, using the
+   same checkbox sibling trick as the nav overlay. */
+.damage-row {
+	margin: 0 0 1rem;
+}
+
+.damage-box {
+	width: 1.15rem;
+	height: 1.15rem;
+	vertical-align: text-bottom;
+	accent-color: var(--navy);
+	cursor: pointer;
+}
+
+.damage-check {
+	display: inline;
+	font-size: 1.05rem;
+	margin: 0 0 0 0.45rem;
+	color: var(--navy-soft);
+	cursor: pointer;
+}
+
+.damage-note-label,
+.damage-note {
+	display: none;
+}
+
+.damage-box:checked ~ .damage-note-label {
+	display: block;
+	font-size: 1.05rem;
+	margin: 0.8rem 0 0;
+}
+
+.damage-box:checked ~ .damage-note {
+	display: block;
+}
+
 .login-form {
 	margin-top: 1.4rem;
 }

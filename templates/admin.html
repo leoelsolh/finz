@@ -17,7 +17,7 @@
 		<div class="shell shell-counter">
 			<p class="day-summary">
 				<strong>{{ rentals|length }}</strong> out ·
-				<strong>{{ board_stock|length }}</strong> in the racks ·
+				<strong>{{ board_stock|sum(attribute='available') }}</strong> in the racks ·
 				<strong>{{ bookings|length }}</strong> booked today
 			</p>
 
@@ -33,6 +33,12 @@
 						<form method="post" action="/admin/return">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 							<input type="hidden" name="board_id" value="{{ rental.board_id }}">
+							<div class="damage-row">
+								<input type="checkbox" id="damage-box-{{ loop.index }}" class="damage-box" name="damaged">
+								<label class="damage-check" for="damage-box-{{ loop.index }}">Noticeable damage?</label>
+								<label class="damage-note-label" for="damage-note-{{ loop.index }}">What is damaged</label>
+								<input type="text" id="damage-note-{{ loop.index }}" class="damage-note" name="damage_note" placeholder="e.g. chipped fin, left side" autocomplete="off">
+							</div>
 							<button type="submit" class="btn">Mark as returned</button>
 						</form>
 					</article>
@@ -67,7 +73,7 @@
 						<label for="board-select">Which board</label>
 						<select id="board-select" name="board_id">
 							{% for board in board_stock %}
-								<option value="{{ board.id }}">{{ board.name }} · {{ board.size }}</option>
+								<option value="{{ board.id }}">{{ board.name }} · {{ board.size }} · {{ board.available }} left</option>
 							{% endfor %}
 						</select>
 						<label for="renter-name">Who is taking it</label>
