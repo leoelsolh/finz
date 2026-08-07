@@ -14,20 +14,18 @@
 		</div>
 	</section>
 
+	{# Two identical groups: the track pans by half its width, so the
+	   second group slides in exactly where the first began. #}
 	<div class="marquee" aria-hidden="true">
 		<div class="marquee-track">
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
-			<span>friends with finz</span>
-			<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+			{% for group in range(2) %}
+				<div class="marquee-group">
+					{% for item in range(8) %}
+						<span>friends with finz</span>
+						<svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1 8 Q5 2 9 8 T17 8 T25 8"/></svg>
+					{% endfor %}
+				</div>
+			{% endfor %}
 		</div>
 	</div>
 
@@ -40,8 +38,13 @@
 		</div>
 	</main>
 
+	<section class="photo-band">
+		<img src="{{ url_for('static', filename='img/boards.jpg') }}" alt="A row of surfboards standing ready for hire">
+	</section>
+
 	<section class="navy-band">
 		<div class="price-list">
+			<h2 class="price-heading">Price list</h2>
 			<div class="price-row">
 				<p class="price-item">Board Hire</p>
 				<span class="price-amount">£25 Per Day</span>

@@ -1,8 +1,6 @@
 # TODO
 
 #### [ Now ]
-- [ ] Damage flag on board return.
-- [ ] Model change: stock by type, not individual boards
 
 #### [ Next ] 
 

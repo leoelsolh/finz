@@ -321,7 +321,9 @@ body:has(.nav-toggle-box:checked) {
 	margin-top: 1.8rem;
 }
 
-/* "friends with finz" marquee strip */
+/* "friends with finz" marquee strip. The track holds two identical
+   groups and pans by half its width, which lines the second group up
+   exactly where the first started, so the loop never jumps. */
 .marquee {
 	overflow: hidden;
 	white-space: nowrap;
@@ -333,12 +335,28 @@ body:has(.nav-toggle-box:checked) {
 
 .marquee-track {
 	display: inline-flex;
-	align-items: center;
-	gap: 2.8rem;
 	font-style: italic;
 	font-weight: 500;
 	font-size: 1.05rem;
 	color: var(--navy-soft);
+	animation: marquee-pan 32s linear infinite;
+}
+
+.marquee-group {
+	display: inline-flex;
+	align-items: center;
+	gap: 2.8rem;
+	padding-left: 2.8rem;
+}
+
+@keyframes marquee-pan {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
 }
 
 .marquee-track svg {
@@ -346,24 +364,34 @@ body:has(.nav-toggle-box:checked) {
 	opacity: 0.7;
 }
 
-/* Solid navy band with a scalloped bottom edge */
+/* Solid navy band with scalloped top and bottom edges */
 .navy-band {
 	position: relative;
 	background: var(--navy);
 	color: var(--white);
+	margin-top: 3rem;
 	margin-bottom: 3rem;
 }
 
+.navy-band::before,
 .navy-band::after {
 	content: '';
 	position: absolute;
-	top: 100%;
 	left: 0;
 	width: 100%;
 	height: 24px;
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='24' viewBox='0 0 64 24'%3E%3Cpath d='M0 0h64v7C53 7 43 17 32 17 21 17 11 7 0 7z' fill='%231A3A7A'/%3E%3C/svg%3E");
 	background-repeat: repeat-x;
 	background-size: 64px 24px;
+}
+
+.navy-band::before {
+	bottom: 100%;
+	transform: scaleY(-1);
+}
+
+.navy-band::after {
+	top: 100%;
 }
 
 .navy-band a {
@@ -385,6 +413,19 @@ body:has(.nav-toggle-box:checked) {
 	max-width: 36rem;
 	margin-inline: auto;
 	padding: 2.4rem 1.5rem 2.8rem;
+}
+
+.price-heading {
+	text-align: center;
+	margin-bottom: 0.4rem;
+}
+
+/* Full-width photo band between home page sections */
+.photo-band img {
+	display: block;
+	width: 100%;
+	height: clamp(180px, 42vw, 380px);
+	object-fit: cover;
 }
 
 .price-row {
@@ -801,5 +842,6 @@ address {
 	*::before,
 	*::after {
 		transition: none !important;
+		animation: none !important;
 	}
 }
