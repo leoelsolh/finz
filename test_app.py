@@ -3,6 +3,7 @@ import time
 import datetime
 import pytest
 
+import db
 import config
 from main import app
 from main import login_attempts
@@ -84,6 +85,9 @@ def test_csrf_rejection(client):
     rejection = client.post('/admin/login', data={'username': 'x', 'password': 'y'})
     assert rejection.status_code == 403
 
+def test_available_boards_counts_quantity(init_test_db):
+    available = db.get_available_boards()
+    assert available[0]['available'] == 11
 
 # Test database functions
 def test_db_connection():

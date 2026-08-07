@@ -107,7 +107,7 @@ def mark_board_in(board_id, damaged=0, damage_note=None):
 
             came_back = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
-                UPDATE rentals SET came_back = ?, damaged_note = ?
+                UPDATE rentals SET came_back = ?, damage_note = ?
                 WHERE board_id = ? AND came_back IS NULL
             ''', (came_back, damage_note, board_id))
 

@@ -108,8 +108,8 @@ def admin_logout():
 @app.route('/admin/return', methods=['POST'])
 def admin_return(): #mark a board as retuned
     marked_board = request.form['board_id']
-    damaged = 1 if request.form('damaged') else 0
-    damage_note = request.form.get('damaged_note')
+    damaged = 1 if request.form.get('damaged') else 0
+    damage_note = request.form.get('damage_note')
     db.mark_board_in(marked_board, damaged, damage_note)
     return redirect(url_for('admin'))
 

@@ -5,4 +5,4 @@ if [ ! -f 'rental.db' ]; then
     echo 'Seeding complete' 
 fi
 
-python3 main.py
+gunicorn --bind 127.0.0.1:5000 --workers 1 main:app

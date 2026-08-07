@@ -18,7 +18,7 @@ def init_db():
                     size     TEXT,
                     price    INTEGER,
                     quantity  INTEGER,
-                    damaged_count INTEGER DEFAULT 0
+                    damage_count INTEGER DEFAULT 0
                 )
             ''')
             cursor.execute('''
