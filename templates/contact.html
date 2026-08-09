@@ -7,22 +7,17 @@
 		<div class="shell shell-narrow">
 			<h1 class="page-title">Contact</h1>
 
-			<form method="post" action="/contact" class="form-card contact-form">
-				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-				<label for="contact-first-name">First Name *</label>
-				<input id="contact-first-name" type="text" name="first_name" autocomplete="given-name" required>
+			<p class="lead">The quickest way to reach us is by phone or email. To reserve a board for a particular day, the <a href="/book">booking page</a> is best.</p>
 
-				<label for="contact-last-name">Last Name *</label>
-				<input id="contact-last-name" type="text" name="last_name" autocomplete="family-name" required>
-
-				<label for="contact-email">Email *</label>
-				<input id="contact-email" type="email" name="email" autocomplete="email" required>
-
-				<label for="contact-message">Message</label>
-				<textarea id="contact-message" name="message" rows="3"></textarea>
-
-				<button type="submit" class="btn">Send</button>
-			</form>
+			<section class="zone">
+				<h2>Get in touch</h2>
+				<address>
+					<p><a href="mailto:finssurfhire@gmail.com?subject=Enquiry%20via%20the%20Finz%20website">finssurfhire@gmail.com</a></p>
+					<p><a href="tel:+4460201020">+44 6020 1020</a></p>
+					<p>Hillend Campsite, Llangennith, Gower</p>
+				</address>
+				<a class="btn" href="mailto:finssurfhire@gmail.com?subject=Enquiry%20via%20the%20Finz%20website">Email us</a>
+			</section>
 		</div>
 	</main>
 {% endblock %}
