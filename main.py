@@ -107,7 +107,7 @@ def admin_logout():
 
 @app.route('/admin/return', methods=['POST'])
 def admin_return(): #mark a board as retuned
-    marked_board = request.form['board_id']
+    marked_board = request.form['rental_id']
     damaged = 1 if request.form.get('damaged') else 0
     damage_note = request.form.get('damage_note')
     db.mark_board_in(marked_board, damaged, damage_note)
@@ -171,4 +171,4 @@ def contact():
 
 # main
 if __name__ == '__main__': 
-    app.run(debug=False)
+    app.run(debug=True)

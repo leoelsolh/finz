@@ -32,7 +32,7 @@
 						<p>With {{ rental.name_booked }} since {{ rental.went_out[11:16] }}</p>
 						<form method="post" action="/admin/return">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-							<input type="hidden" name="board_id" value="{{ rental.board_id }}">
+							<input type="hidden" name="rental_id" value="{{ rental.rental_id }}">
 							<div class="damage-row">
 								<input type="checkbox" id="damage-box-{{ loop.index }}" class="damage-box" name="damaged">
 								<label class="damage-check" for="damage-box-{{ loop.index }}">Noticeable damage?</label>

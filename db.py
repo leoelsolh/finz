@@ -100,21 +100,32 @@ def mark_board_out(board_id, renter_name):
         logging.exception('Failed to mark board out')
         raise DatabaseError('Could not mark board out') from sql_error
 
-def mark_board_in(board_id, damaged=0, damage_note=None):
+def mark_board_in(rental_id, damaged=0, damage_note=None):
     try:
         with get_connection() as connection:
-            cursor = connection.cursor()
+            cursor = connection.cursor() 
+
+            cursor.execute('''
+                SELECT board_id
+                FROM rentals 
+                WHERE id = ?            
+            ''', (rental_id,))
+
+            rental_row = cursor.fetchone()
+
+            if not rental_row:
+                return
 
             came_back = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
                 UPDATE rentals SET came_back = ?, damage_note = ?
-                WHERE board_id = ? AND came_back IS NULL
-            ''', (came_back, damage_note, board_id))
+                WHERE id = ? AND came_back IS NULL
+            ''', (came_back, damage_note, rental_id))
 
             if damaged:
                 cursor.execute('''
                     UPDATE boards SET damage_count = damage_count + 1 WHERE id = ?
-                ''', (board_id,))
+                ''', (rental_row['board_id'],))
 
             connection.commit()
 
@@ -128,7 +139,7 @@ def get_active_rentals():
             cursor = connection.cursor()
 
             cursor.execute('''
-                SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out
+                SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out, rentals.id AS rental_id
                 FROM rentals
                 JOIN boards ON rentals.board_id = boards.id
                 WHERE came_back IS NULL
