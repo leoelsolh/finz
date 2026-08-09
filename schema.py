@@ -4,6 +4,7 @@
 # this script builds the database tables
 # before they are populated by 'seed.py'
 import sqlite3
+from db import DatabaseError
 from config import DB_PATH
 
 def init_db():
@@ -44,4 +45,4 @@ def init_db():
             ''')
 
     except sqlite3.Error as error:
-        raise Exception(f"\nCant load database...\n{error}\n")
+        raise DatabaseError('Could not set schema') from error

@@ -69,7 +69,7 @@ def get_available_boards():
 
             cursor.execute('''
                 SELECT id, name, size, price, 
-                    quantity - damaged_count - (
+                    quantity - damage_count - (
                         SELECT COUNT(*) FROM rentals
                         WHERE rentals.board_id = boards.id
                         AND came_back IS NULL
@@ -113,7 +113,7 @@ def mark_board_in(board_id, damaged=0, damage_note=None):
 
             if damaged:
                 cursor.execute('''
-                    UPDATE boards SET damages_count = damaged_count + 1 WHERE id = ?
+                    UPDATE boards SET damage_count = damage_count + 1 WHERE id = ?
                 ''', (board_id,))
 
             connection.commit()

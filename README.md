@@ -1,4 +1,4 @@
-# Fins Surf Hire
+# Finz Surf Hire
 ### [ Surf Rental App / made with flask ] 
 [ Currently in Active Development ]
 
@@ -30,8 +30,8 @@ Once you've settled on the points above, here's how you can set this up on your 
 ###### [ Step One ] 
 Install the requirements from the `requirements.txt` file:
 ```
-git clone https://github.com/leoelsolh/fins-surf-rental.git
-cd fins-surf-rental
+git clone https://github.com/leoelsolh/finz.git
+cd finz
 pip install -r requirements.txt
 
 ```
