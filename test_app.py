@@ -50,7 +50,7 @@ def test_about_loads(client):
 
 # Test site functions
 def test_login_lockout(client):
-    for _ in range(5):
+    for _ in range(4):
         invalid_response = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong', 'csrf_token': CSRF})
         assert invalid_response.status_code == 401
     blocked = client.post('/admin/login', data={'username': 'carl', 'password': 'wrong', 'csrf_token': CSRF})

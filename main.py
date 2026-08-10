@@ -77,8 +77,6 @@ def admin(): #admin dashboard
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
-    print(request.remote_addr)
-    print(request.headers.get('X-Forwarded-For'))
     if request.method == 'POST':
         ip = request.remote_addr
         now = time.time()

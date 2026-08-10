@@ -68,13 +68,15 @@ def get_available_boards():
             cursor = connection.cursor()
 
             cursor.execute('''
-                SELECT id, name, size, price, 
-                    quantity - damage_count - (
-                        SELECT COUNT(*) FROM rentals
-                        WHERE rentals.board_id = boards.id
-                        AND came_back IS NULL
-                    ) AS available
-                FROM boards
+                SELECT * FROM (
+                    SELECT id, name, size, price, 
+                        quantity - damage_count - (
+                            SELECT COUNT(*) FROM rentals
+                            WHERE rentals.board_id = boards.id
+                            AND came_back IS NULL
+                        ) AS available
+                    FROM boards
+                ) WHERE available > 0
             ''')
             return cursor.fetchall()
 
