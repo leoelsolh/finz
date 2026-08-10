@@ -37,6 +37,11 @@ def get_csrf_token():
 def inject_csrf_token():
     return {'csrf_token': get_csrf_token()}
 
+@app.context_processor
+def inject_shop_details():
+    return {'shop_phone': config.SHOP_PHONE, 'shop_email': config.SHOP_EMAIL}
+
+
 # Site logic
 @app.before_request
 def check_auth_session(): #Preproccessing
@@ -71,6 +76,8 @@ def admin(): #admin dashboard
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
+    print(request.remote_addr)
+    print(request.headers.get('X-Forwarded-For'))
     if request.method == 'POST':
         ip = request.remote_addr
         now = time.time()
