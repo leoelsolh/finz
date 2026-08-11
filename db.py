@@ -107,6 +107,14 @@ def mark_board_in(rental_id, damaged=0, damage_note=None):
         with get_connection() as connection:
             cursor = connection.cursor() 
 
+            if not damage_note: 
+                damage_note = None 
+
+            else: 
+                damage_note = damage_note.strip()
+                if not damage_note:
+                    damage_note = None
+
             cursor.execute('''
                 SELECT board_id
                 FROM rentals 
