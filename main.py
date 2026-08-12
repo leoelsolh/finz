@@ -90,8 +90,11 @@ def admin_login():
         if len(recent) >= config.MAX_LOGIN_ATTEMPTS:
             return render_template('login.html', error='Too many attempts. Try again later.'), 429
 
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not username or not password:
+            return render_template('login.html', error='Both fields are required')
  
         # Success logic
         username_ok = hmac.compare_digest(username, config.ADMIN_USER)
@@ -116,16 +119,25 @@ def admin_logout():
 
 @app.route('/admin/return', methods=['POST'])
 def admin_return(): #mark a board as retuned
-    marked_board = request.form['rental_id']
+    marked_board = request.form.get('rental_id')
     damaged = 1 if request.form.get('damaged') else 0
     damage_note = request.form.get('damage_note')
+
+    if not marked_board:
+        flash('A board must be selected')
+        return redirect(url_for('admin'))
+
     db.mark_board_in(marked_board, damaged, damage_note)
     return redirect(url_for('admin'))
 
 @app.route('/admin/out', methods=['POST'])
 def admin_out(): #mark a board as gone out
-    board_id = request.form['board_id']
-    renter_name = request.form['renter_name']
+    board_id = request.form.get('board_id')
+    renter_name = request.form.get('renter_name')
+    if not board_id or not renter_name:
+        flash('Please enter all fields')
+        return redirect(url_for('admin'))
+
     db.mark_board_out(board_id, renter_name)
     return redirect(url_for('admin'))
 
@@ -138,14 +150,16 @@ def index():
 def booking(): #book a board
     if request.method == 'POST':
 
-        booking_name = request.form['name']
-        booking_number = request.form['phone']
+        booking_name = request.form.get('name')
+        booking_number = request.form.get('phone')
         booking_email = request.form.get('email')
-        booking_size = request.form['size_requested']
+        booking_size = request.form.get('size_requested')
         booking_wetsuit = 1 if request.form.get('wetsuit') else 0
-        booking_date = request.form['hire_date']
+        booking_date = request.form.get('hire_date')
 
         sizes = db.get_board_sizes()
+        if not booking_name or not booking_date or not booking_size or not booking_number:
+            return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
 
         try:
             parsed_date = datetime.datetime.strptime(booking_date, '%Y-%m-%d').date()
@@ -155,16 +169,13 @@ def booking(): #book a board
         if parsed_date < datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)).date():
             return render_template('book.html', sizes=sizes, error='Hire date cannot be in the past')
 
-        if not booking_name or not booking_date or not booking_size:
-            return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
-
         try:
             db.add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
             flash('Your booking has been processed. Thank you.')
             return redirect(url_for('booking'))
             
         except db.DatabaseError:
-            return render_template('book.html', sizes=[], error='Something went wrong, Try again shortly'), 500
+            return render_template('book.html', sizes=sizes, error='Something went wrong, Try again shortly'), 500
 
     if request.method == 'GET':
         sizes = db.get_board_sizes()
