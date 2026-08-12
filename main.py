@@ -13,6 +13,7 @@ from flask import request
 from flask import redirect
 from flask import session
 from flask import url_for
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash
 
 import db
@@ -20,6 +21,7 @@ import config
 import schema
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 app.secret_key = config.SECRET_KEY
 app.config['SESSION_COOKIE_SAMESITE'] = config.SESSION_COOKIE_SAMESITE
 app.config['SESSION_COOKIE_SECURE'] = config.SESSION_COOKIE_SECURE
