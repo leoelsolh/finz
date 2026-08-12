@@ -13,6 +13,7 @@ from flask import request
 from flask import redirect
 from flask import session
 from flask import url_for
+from zoneinfo import ZoneInfo
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash
 
@@ -144,8 +145,17 @@ def booking(): #book a board
         booking_wetsuit = 1 if request.form.get('wetsuit') else 0
         booking_date = request.form['hire_date']
 
+        sizes = db.get_board_sizes()
+
+        try:
+            parsed_date = datetime.datetime.strptime(booking_date, '%Y-%m-%d').date()
+        except ValueError:
+            return render_template('book.html', sizes=sizes, error='Please enter a valid date')
+
+        if parsed_date < datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)).date():
+            return render_template('book.html', sizes=sizes, error='Hire date cannot be in the past')
+
         if not booking_name or not booking_date or not booking_size:
-            sizes = db.get_board_sizes()
             return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
 
         try:
@@ -154,7 +164,6 @@ def booking(): #book a board
             return redirect(url_for('booking'))
             
         except db.DatabaseError:
-            #flash('Something went wrong, try again shortly')
             return render_template('book.html', sizes=[], error='Something went wrong, Try again shortly'), 500
 
     if request.method == 'GET':
