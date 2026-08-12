@@ -20,21 +20,6 @@ def get_connection():
         connection.close()
 
 # Site helpers
-def get_board_types():
-    try:
-        with get_connection() as connection:
-            cursor = connection.cursor()
-
-            cursor.execute('''
-                SELECT name, size, price, COUNT(*) AS quantity
-                FROM boards
-                GROUP BY name, size, price
-            ''')
-    
-    except sqlite3.OperationalError as op_error:
-        logging.exception('Failed to group boards')
-        raise DatabaseError('Could not group boards') from op_error
-
 def get_board_sizes():
     try: 
         with get_connection() as connection:
