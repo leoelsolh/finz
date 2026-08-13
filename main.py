@@ -150,6 +150,10 @@ def index():
 def booking(): #book a board
     if request.method == 'POST':
 
+        if request.form.get('website'): # Silently drop requests that fill out hidden field
+            flash('Your booking has been processed. Thank you.')
+            return redirect(url_for('booking'))
+
         booking_name = request.form.get('name')
         booking_number = request.form.get('phone')
         booking_email = request.form.get('email')
