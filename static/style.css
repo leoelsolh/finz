@@ -846,6 +846,40 @@ address {
 	}
 }
 
+/* 404: one big number, sat in the middle of the screen */
+.notfound {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	min-height: 72vh;
+	min-height: 72svh;
+	padding: 2rem 1.25rem 3rem;
+}
+
+.notfound-code {
+	font-family: var(--display);
+	font-style: italic;
+	font-weight: 800;
+	font-size: clamp(7rem, 34vw, 15rem);
+	line-height: 0.9;
+	letter-spacing: -0.02em;
+	color: var(--navy);
+	margin: 0;
+}
+
+.notfound-title {
+	font-size: clamp(1.6rem, 5vw, 2.4rem);
+	margin: 1rem 0 0;
+}
+
+.notfound-sub {
+	font-size: 1.3rem;
+	color: var(--navy-soft);
+	margin: 0.5rem 0 1.8rem;
+}
+
 /* Honeypot: hidden from people, tempting to bots. A real booking leaves it empty. */
 .hp-field {
 	position: absolute;

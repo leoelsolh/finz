@@ -2,13 +2,14 @@
 
 #### [ Now ]
 - [ ] SESSION_COOKIE_SECURE, flip after TLS
-- [ ] Pick a hosting provider
+- [ ] Add custom 404 page
 
 #### [ Next ] 
 - [ ] Multi-user accounts
 - [ ] Stock management: add/remove boards, clear damage
 - [ ] Wetsuits and body boards as separate hire items (£15/£10)
 - [ ] LICENSE file
+- [ ] Add HSTS and CSP headers before going live.
 
 #### [ Bugs ]
 - [ ] No migration system so schema changes mean deleting every .db file

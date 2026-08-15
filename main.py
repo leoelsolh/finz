@@ -79,6 +79,10 @@ def set_security_headers(response):
 def handle_database_error(error):
     return render_template('error.html'), 503
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404
+
 # Admin pages
 @app.route('/admin')
 def admin():
