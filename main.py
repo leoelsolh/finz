@@ -29,7 +29,7 @@ app.config['SESSION_COOKIE_SECURE'] = config.SESSION_COOKIE_SECURE
 app.permanent_session_lifetime = datetime.timedelta(hours=config.SESSION_LIFETIME_HOURS)
 logging.basicConfig(level=logging.INFO)
 
-schema.init_db() #Init database tables
+schema.init_db()
 login_attempts = {}
 
 def get_csrf_token():
@@ -48,7 +48,7 @@ def inject_shop_details():
 
 # Site logic
 @app.before_request
-def check_auth_session(): #Preproccessing
+def check_auth_session():
     if request.path.startswith('/admin'):
         if request.path == '/admin/login':
             return 
@@ -65,13 +65,20 @@ def check_csrf_token():
         if not token or not form_token or not hmac.compare_digest(token, form_token):
             abort(403)
 
+@app.after_request
+def set_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response
+
 @app.errorhandler(db.DatabaseError)
 def handle_database_error(error):
     return render_template('error.html'), 503
 
 # Admin pages
 @app.route('/admin')
-def admin(): #admin dashboard
+def admin():
     rentals = db.get_active_rentals()
     board_stock = db.get_available_boards()
     bookings = db.get_todays_bookings()
@@ -118,7 +125,7 @@ def admin_logout():
     return redirect(url_for('admin'))
 
 @app.route('/admin/return', methods=['POST'])
-def admin_return(): #mark a board as retuned
+def admin_return():
     marked_board = request.form.get('rental_id')
     damaged = 1 if request.form.get('damaged') else 0
     damage_note = request.form.get('damage_note')
@@ -131,7 +138,7 @@ def admin_return(): #mark a board as retuned
     return redirect(url_for('admin'))
 
 @app.route('/admin/out', methods=['POST'])
-def admin_out(): #mark a board as gone out
+def admin_out():
     board_id = request.form.get('board_id')
     renter_name = request.form.get('renter_name')
     if not board_id or not renter_name:
@@ -147,7 +154,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book', methods=['GET', 'POST'])
-def booking(): #book a board
+def booking():
     if request.method == 'POST':
 
         if request.form.get('website'): # Silently drop requests that fill out hidden field
@@ -203,4 +210,4 @@ def contact():
 
 # main
 if __name__ == '__main__': 
-    app.run(debug=True)
+    app.run(debug=False)
