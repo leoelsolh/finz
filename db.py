@@ -82,7 +82,10 @@ def mark_board_out(board_id, renter_name):
             ''', (went_out, board_id, renter_name))
             
             connection.commit()
-    
+            
+            rental_id = cursor.lastrowid
+            return rental_id
+
     except sqlite3.Error as sql_error:
         logging.exception('Failed to mark board out')
         raise DatabaseError('Could not mark board out') from sql_error

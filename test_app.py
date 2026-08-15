@@ -89,6 +89,26 @@ def test_available_boards_counts_quantity(init_test_db):
     available = db.get_available_boards()
     assert available[0]['available'] == 11
 
+def test_available_boards_count_drops(init_test_db):
+    board_id = init_test_db #This will return the last row's board_id so we can use it in the test.
+    db.mark_board_out(board_id, 'testxx')
+    assert db.get_available_boards()[0]['available'] == 10
+
+def test_available_boards_count_rises(init_test_db):
+    board_id = init_test_db
+    rental_ids = []
+
+    for _ in range(3):
+        rental_id = db.mark_board_out(board_id, 'test')
+        rental_ids.append(rental_id)
+
+    db.mark_board_in(rental_ids[1])
+
+    active = db.get_active_rentals()
+    assert len(active) == 2
+    assert db.get_available_boards()[0]['available'] == 9
+
+
 # Test database functions
 def test_db_connection():
     #TODO: write a connection test.

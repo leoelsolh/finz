@@ -11,10 +11,13 @@ def init_test_db():
         cursor = database.cursor()
 
         cursor.execute('''DELETE FROM boards''')
-
-        board = [("RYD", "8'0", 25, 11)]
-        cursor.executemany(
+        cursor.execute('''DELETE FROM rentals''')
+        cursor.execute(
             '''INSERT INTO boards (name, size, price, quantity) VALUES (?, ?, ?, ?)''',
-            board
+            ("RYD", "8'0", 25, 11)
         )
+
+        board_id = cursor.lastrowid
+        return board_id
+
         database.commit()
