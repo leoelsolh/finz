@@ -1,8 +1,7 @@
 # TODO
 
 #### [ Now ]
-- [ ] ProxyFix for remote_addr
-- [ ] SESSION_COOKIE_SECURE, True in prod
+- [ ] SESSION_COOKIE_SECURE, flip after TLS
 - [ ] Pick a hosting provider
 
 #### [ Next ] 

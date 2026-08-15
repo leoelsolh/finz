@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+echo "Running Ruff..."
 set -e
 ruff check .
-pytest test_app.py
+echo
+echo "Running Pytest Suite..."
+pytest test_app.py -v
