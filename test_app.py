@@ -81,6 +81,11 @@ def test_expired_session(client, monkeypatch):
     response = client.get('/admin')
     assert response.status_code == 302 
 
+def test_oversized_post_rejection(client):
+    payload = 'a' * 20000
+    rejection = client.post('/book', data={'name': payload, 'csrf_token': CSRF})
+    assert rejection.status_code == 413
+    
 def test_csrf_rejection(client):
     rejection = client.post('/admin/login', data={'username': 'x', 'password': 'y'})
     assert rejection.status_code == 403
