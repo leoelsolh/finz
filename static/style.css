@@ -600,6 +600,12 @@ p strong {
 	color: var(--navy-soft);
 }
 
+.chip-damage {
+	color: var(--cream);
+	background: var(--brick);
+	border-color: var(--brick);
+}
+
 /* Forms: labels above, underline-only inputs */
 label {
 	display: block;

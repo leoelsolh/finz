@@ -2,7 +2,6 @@
 
 #### [ Now ]
 - [ ] SESSION_COOKIE_SECURE, flip after TLS
-- [ ] Add custom 404 page
 
 #### [ Next ] 
 - [ ] Multi-user accounts

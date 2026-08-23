@@ -84,6 +84,25 @@
 					<p class="empty">Every board is out. Mark one as returned first.</p>
 				{% endif %}
 			</section>
+
+			{% if damaged_boards %}
+				<section class="zone">
+					<h2>Needs repair</h2>
+					{% for board in damaged_boards %}
+						<article class="card">
+							<div class="card-head">
+								<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
+								<span class="chip chip-damage">{{ board.damage_count }} flagged</span>
+							</div>
+							<form method="post" action="/admin/repair">
+								<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+								<input type="hidden" name="board_id" value="{{ board.id }}">
+								<button type="submit" class="btn">Mark one repaired</button>
+							</form>
+						</article>
+					{% endfor %}
+				</section>
+			{% endif %}
 		</div>
 	</main>
 {% endblock %}

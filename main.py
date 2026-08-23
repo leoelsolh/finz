@@ -1,4 +1,13 @@
 #!/usr/bin/python3
+#
+#          [ Finz Surf Rental ]
+#
+# Main script. Handles app config and connects
+# the frontend to the backend. 'db.' and 'config.'
+# prefixes to fetch and handle database and config
+# logic. Database helpers are seperate from this 
+# script, you can view SQL ops in 'db.py'
+#
 import time
 import hmac
 import secrets
@@ -89,8 +98,9 @@ def admin():
     rentals = db.get_active_rentals()
     board_stock = db.get_available_boards()
     bookings = db.get_todays_bookings()
+    damaged_boards = db.get_damaged_boards()
 
-    return render_template('admin.html', rentals=rentals, board_stock=board_stock, bookings=bookings)
+    return render_template('admin.html', rentals=rentals, board_stock=board_stock, bookings=bookings, damaged_boards=damaged_boards)
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -118,7 +128,6 @@ def admin_login():
             login_attempts.pop(ip, None)
             session.permanent = True
             session['name'] = username 
-
             return redirect(url_for('admin'))
 
         login_attempts[ip].append(now)
@@ -153,6 +162,16 @@ def admin_out():
         return redirect(url_for('admin'))
 
     db.mark_board_out(board_id, renter_name)
+    return redirect(url_for('admin'))
+
+@app.route('/admin/repair', methods=['POST'])
+def admin_repair():
+    board_id = request.form.get('board_id')
+    if not board_id:
+        flash('Please enter all fields')
+        return redirect(url_for('admin'))
+
+    db.clear_damage_from_board(board_id)
     return redirect(url_for('admin'))
 
 # User-facing pages

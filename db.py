@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+#
+#       [ Database Helpers ]
+#
+# Sqlite3 python queries, served to the 
+# main script to seperate database operations
+# from frontend route logic
+#
 import datetime
 import sqlite3
 import contextlib
@@ -69,7 +76,6 @@ def get_available_boards():
         logging.exception('Failed to fetch available boards')
         raise DatabaseError('Could not fetch available boards') from sql_error
 
-
 # Admin logic
 def mark_board_out(board_id, renter_name):
     try:
@@ -116,20 +122,58 @@ def mark_board_in(rental_id, damaged=0, damage_note=None):
 
             came_back = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
-                UPDATE rentals SET came_back = ?, damage_note = ?
-                WHERE id = ? AND came_back IS NULL
+                UPDATE rentals 
+                SET came_back = ?, damage_note = ?
+                WHERE id = ? 
+                AND came_back IS NULL
             ''', (came_back, damage_note, rental_id))
 
             if damaged:
                 cursor.execute('''
-                    UPDATE boards SET damage_count = damage_count + 1 WHERE id = ?
+                    UPDATE boards 
+                    SET damage_count = damage_count + 1 
+                    WHERE id = ?
                 ''', (rental_row['board_id'],))
 
             connection.commit()
 
     except sqlite3.Error as sql_error:
         logging.exception('Failed to mark board in')
-        raise DatabaseError('Could not mark board in') from sql_error
+        raise DatabaseError('Could not mark board in.') from sql_error
+
+def get_damaged_boards():
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                SELECT id, name, size, damage_count
+                FROM boards
+                WHERE damage_count > 0
+            ''')
+            return cursor.fetchall()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to fetch damaged boards')
+        raise DatabaseError('Could not fetch damaged boards.') from sql_error
+
+def clear_damage_from_board(board_id):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                UPDATE boards 
+                SET damage_count = damage_count - 1 
+                WHERE damage_count > 0
+                AND id = ?
+            ''', (board_id,))
+
+            connection.commit()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to clear damage-marker from board.')
+        raise DatabaseError('Could not clear damage-marker from board.') from sql_error
 
 def get_active_rentals():
     try:
@@ -146,7 +190,7 @@ def get_active_rentals():
 
     except sqlite3.Error as sql_error:
         logging.exception('Failed to fetch active rentals')
-        raise DatabaseError('Could not fetch active rentals') from sql_error
+        raise DatabaseError('Could not fetch active rentals.') from sql_error
 
 def get_todays_bookings():
     try:
