@@ -420,12 +420,42 @@ body:has(.nav-toggle-box:checked) {
 	margin-bottom: 0.4rem;
 }
 
-/* Full-width photo band between home page sections */
+/* Full-width photo band between home page sections.
+   Shows a product photo of any aspect ratio without cropping: the image keeps
+   its natural ratio and sits centred, while a blurred copy of the same image
+   (passed in via the --band-photo custom property) fills the band so the
+   letterboxed sides on wide screens read as intentional rather than empty. */
+.photo-band {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	padding: 2rem 1.5rem;
+	background: var(--cream-deep);
+}
+
+.photo-band::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--band-photo);
+	background-size: cover;
+	background-position: center;
+	filter: blur(30px) brightness(0.9);
+	transform: scale(1.2);
+}
+
 .photo-band img {
+	position: relative;
 	display: block;
-	width: 100%;
-	height: clamp(180px, 42vw, 380px);
-	object-fit: cover;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: min(78vh, 540px);
+	object-fit: contain;
+	border-radius: var(--radius);
+	box-shadow: 0 12px 32px rgba(26, 58, 122, 0.28);
 }
 
 .price-row {
