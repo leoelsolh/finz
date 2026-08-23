@@ -113,8 +113,24 @@ def test_available_boards_count_rises(init_test_db):
     assert len(active) == 2
     assert db.get_available_boards()[0]['available'] == 9
 
-
 # Test database functions
 def test_db_connection():
-    #TODO: write a connection test.
     pass
+
+def test_damage_flag_lowers_availability(init_test_db):
+    board_id = init_test_db
+    rental_id = db.mark_board_out(board_id, 'dbtest')
+    db.mark_board_in(rental_id, damaged=1)
+    assert db.get_available_boards()[0]['available'] == 10
+
+def test_clearing_damage_rises_availability(init_test_db):
+    board_id = init_test_db
+    rental_id = db.mark_board_out(board_id, 'dbtest')
+    db.mark_board_in(rental_id, damaged=1)
+    db.clear_damage_from_board(board_id)
+    assert db.get_available_boards()[0]['available'] == 11
+
+def test_damage_clear_floors_at_zero(init_test_db): # (Make sure you cant clear damage from a board thats not damaged...)
+    board_id = init_test_db
+    db.clear_damage_from_board(board_id)
+    assert db.get_available_boards()[0]['available'] == 11
