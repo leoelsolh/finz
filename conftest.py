@@ -18,6 +18,5 @@ def init_test_db():
         )
 
         board_id = cursor.lastrowid
-        return board_id
-
         database.commit()
+        return board_id
