@@ -127,6 +127,10 @@ def mark_board_in(rental_id, damaged=0, damage_note=None):
                 AND came_back IS NULL
             ''', (came_back, damage_note, rental_id))
 
+            row_count = cursor.rowcount
+            if row_count == 0:
+                return
+
             if damaged:
                 cursor.execute('''
                     UPDATE boards 
