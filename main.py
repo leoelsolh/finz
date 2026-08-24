@@ -56,6 +56,10 @@ def inject_csrf_token():
 def inject_shop_details():
     return {'shop_phone': config.SHOP_PHONE, 'shop_email': config.SHOP_EMAIL}
 
+@app.template_filter('shoptime')
+def shoptime(value):
+    ldn_time = datetime.datetime.strptime(value, '%Y-%m-%d %H:%M:%S').replace(tzinfo=datetime.timezone.utc).astimezone(ZoneInfo(config.SHOP_TIMEZONE))
+    return ldn_time.strftime('%H:%M')
 
 # Site logic
 @app.before_request
@@ -140,7 +144,7 @@ def admin_login():
 @app.route('/admin/logout', methods=['POST'])
 def admin_logout():
     session.clear()
-    return redirect(url_for('admin'))
+    return redirect(url_for('admin_login'))
 
 @app.route('/admin/return', methods=['POST'])
 def admin_return():

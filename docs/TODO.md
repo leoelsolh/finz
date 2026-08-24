@@ -14,8 +14,6 @@
 #### [ Bugs ]
 - [ ] No migration system so schema changes mean deleting every .db file
 - [ ] seed.py uses naive datetime.now() for booking dates
-- [ ] Counter shows UTC, not shop time: went_out stored UTC (db.py), printed raw as     went_out[11:16] in admin.html. An hour out in BST.
-- [ ] Phantom damage: mark_board_in bumps damage_count even when the came_back UPDATE matched no row (double-submit, refresh). Guard on cursor.rowcount, not the checkbox.
 - [ ] went_out[11:16] parses a datetime by string-slicing. Store and handle as a real datetime.
 - [ ] No FK constraints, PRAGMA foreign_keys off: rentals.board_id references boards.id by convention only. No NOT NULL either.
 - [ ] get_active_rentals duplicates the whole SELECT/JOIN across both if/else branches. Build the WHERE conditionally, keep one query.

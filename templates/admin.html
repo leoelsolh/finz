@@ -75,7 +75,7 @@
 												<h3>{{ rental.name }} <span class="size">{{ rental.size }}</span></h3>
 												<span class="chip chip-out">Out</span>
 											</div>
-											<p>With {{ rental.name_booked }} since {{ rental.went_out[11:16] }}</p>
+											<p>With {{ rental.name_booked }} since {{ rental.went_out | shoptime }}</p>
 											<form method="post" action="/admin/return">
 												<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 												<input type="hidden" name="rental_id" value="{{ rental.rental_id }}">
