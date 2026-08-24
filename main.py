@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-#
 #          [ Finz Surf Rental ]
 #
 # Main script. Handles app config and connects
@@ -7,7 +5,8 @@
 # prefixes to fetch and handle database and config
 # logic. Database helpers are seperate from this 
 # script, you can view SQL ops in 'db.py'
-#
+
+#!/usr/bin/python3
 import time
 import hmac
 import secrets
@@ -95,12 +94,15 @@ def not_found(error):
 # Admin pages
 @app.route('/admin')
 def admin():
-    rentals = db.get_active_rentals()
+    search = request.args.get('q')
+
+    out_total = len(db.get_active_rentals())
+    rentals = db.get_active_rentals(search)
     board_stock = db.get_available_boards()
     bookings = db.get_todays_bookings()
     damaged_boards = db.get_damaged_boards()
 
-    return render_template('admin.html', rentals=rentals, board_stock=board_stock, bookings=bookings, damaged_boards=damaged_boards)
+    return render_template('admin.html', out_total=out_total, rentals=rentals, search=search, board_stock=board_stock, bookings=bookings, damaged_boards=damaged_boards)
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():

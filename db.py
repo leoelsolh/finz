@@ -1,11 +1,10 @@
-#!/usr/bin/python3
-#
 #       [ Database Helpers ]
 #
 # Sqlite3 python queries, served to the 
 # main script to seperate database operations
 # from frontend route logic
-#
+
+#!/usr/bin/python3
 import datetime
 import sqlite3
 import contextlib
@@ -175,18 +174,31 @@ def clear_damage_from_board(board_id):
         logging.exception('Failed to clear damage-marker from board.')
         raise DatabaseError('Could not clear damage-marker from board.') from sql_error
 
-def get_active_rentals():
+def get_active_rentals(search=None):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
 
-            cursor.execute('''
-                SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out, rentals.id AS rental_id
-                FROM rentals
-                JOIN boards ON rentals.board_id = boards.id
-                WHERE came_back IS NULL
-            ''')
-            return cursor.fetchall()
+            if search:
+                like = f'%{search}%'
+                cursor.execute('''
+                    SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out, rentals.id AS rental_id
+                    FROM rentals
+                    JOIN boards ON rentals.board_id = boards.id
+                    WHERE came_back IS NULL
+
+                    AND name_booked LIKE ?
+                ''', (like,))
+                return cursor.fetchall()
+
+            else:
+                cursor.execute('''
+                    SELECT boards.id AS board_id, boards.name, boards.size, rentals.name_booked, rentals.went_out, rentals.id AS rental_id
+                    FROM rentals
+                    JOIN boards ON rentals.board_id = boards.id
+                    WHERE came_back IS NULL
+                ''')
+                return cursor.fetchall()
 
     except sqlite3.Error as sql_error:
         logging.exception('Failed to fetch active rentals')
