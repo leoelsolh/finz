@@ -108,6 +108,7 @@ h3 {
 .shell-form { max-width: 56rem; }
 .shell-narrow { max-width: 40rem; }
 .shell-counter { max-width: 34rem; }
+.shell-dash { max-width: 58rem; }
 
 main {
 	padding-bottom: 2rem;
@@ -745,10 +746,145 @@ legend {
 	margin: 1.6rem 0 0.4rem;
 }
 
-/* Counter */
-.day-summary {
-	font-size: 1.3rem;
-	margin: 1.8rem 0 0;
+/* Counter dashboard: one page, panels tiled on desktop, stacked on mobile */
+.dashboard {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: 1.4rem;
+}
+
+/* Two independent columns on desktop: a long "Out now" list grows on its
+   own and never pushes bookings or stock down the page. Stacked on mobile. */
+.dash-cols {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.dash-col {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+@media (min-width: 48rem) {
+	.dash-cols {
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 1.2rem;
+	}
+	.dash-col {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+/* Out now can grow without bound, so cap it and let it scroll inside its own
+   panel rather than stretching the page and burying everything below it. */
+.scroll-list {
+	max-height: 60vh;
+	overflow-y: auto;
+	padding-right: 0.2rem;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Search the "Out now" list by renter name */
+.search-row {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-bottom: 0.9rem;
+}
+
+.search-input {
+	flex: 1;
+	min-width: 0;
+}
+
+.search-row .btn {
+	flex-shrink: 0;
+}
+
+.search-clear {
+	flex-shrink: 0;
+	font-size: 1rem;
+	color: var(--navy-soft);
+}
+
+/* Collapsible "Out now" list: compact by default, tap the summary to open */
+.out-list > summary {
+	cursor: pointer;
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: var(--navy);
+	padding: 0.5rem 0;
+}
+
+.out-list > summary:hover {
+	color: var(--navy-soft);
+}
+
+.out-list[open] > summary {
+	margin-bottom: 0.8rem;
+}
+
+.panel {
+	background: var(--cream-deep);
+	border-radius: var(--radius);
+	padding: 1.1rem 1.2rem 1.3rem;
+}
+
+/* Full-width panels: the status bar and the growing admin area */
+.panel-wide {
+	grid-column: 1 / -1;
+}
+
+.panel h2 {
+	font-size: 1.15rem;
+	letter-spacing: 0.02em;
+	margin: 0 0 0.9rem;
+}
+
+/* Cards sit on the panel tint, so drop the trailing gap on the last one */
+.panel .card:last-child {
+	margin-bottom: 0;
+}
+
+.panel .empty {
+	margin: 0;
+}
+
+/* Status bar: counts across the top, plus anything needing attention */
+.status-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.4rem 1rem;
+	background: var(--navy);
+	color: var(--cream);
+	border-radius: var(--radius);
+	padding: 1rem 1.2rem;
+}
+
+.status-counts {
+	font-size: 1.25rem;
+	margin: 0;
+}
+
+.status-flag {
+	margin-left: auto;
+	font-weight: 600;
+	font-size: 1.05rem;
+	color: var(--brick);
+	background: var(--cream);
+	padding: 0.15rem 0.8rem;
+	border-radius: 999px;
+	text-decoration: none;
+}
+
+.status-flag:hover {
+	background: var(--white);
 }
 
 /* Damage flag on the return form. Clean returns are the common case,
