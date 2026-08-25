@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 #
-#    __Seed Script__
-#  [ Placeholder data ]
-#
+#         [ Seed Script ]
+# 
+# This script seeds the database with 
+# placeholder data for development and 
+# testing purposes. None of the data is 
+# real or used in prod.
+
 import sqlite3
 import datetime
 import config
 import schema
-schema.init_db()
+schema.run_migrations()
 
 try:
     with sqlite3.connect(config.DB_PATH) as database:

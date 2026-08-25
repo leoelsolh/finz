@@ -12,9 +12,7 @@
 - [ ] Add HSTS and CSP headers before going live.
 
 #### [ Bugs ]
-- [ ] No migration system so schema changes mean deleting every .db file
 - [ ] seed.py uses naive datetime.now() for booking dates
-- [ ] went_out[11:16] parses a datetime by string-slicing. Store and handle as a real datetime.
 - [ ] No FK constraints, PRAGMA foreign_keys off: rentals.board_id references boards.id by convention only. No NOT NULL either.
 - [ ] get_active_rentals duplicates the whole SELECT/JOIN across both if/else branches. Build the WHERE conditionally, keep one query.
 - [ ] schema.init_db() runs as an import side effect (main.py, seed.py).

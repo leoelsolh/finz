@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 #          [ Finz Surf Rental ]
 #
 # Main script. Handles app config and connects
@@ -6,7 +8,6 @@
 # logic. Database helpers are seperate from this 
 # script, you can view SQL ops in 'db.py'
 
-#!/usr/bin/python3
 import time
 import hmac
 import secrets
@@ -40,7 +41,7 @@ app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
 app.permanent_session_lifetime = datetime.timedelta(hours=config.SESSION_LIFETIME_HOURS)
 logging.basicConfig(level=logging.INFO)
 
-schema.init_db()
+schema.run_migrations()
 login_attempts = {}
 
 def get_csrf_token():

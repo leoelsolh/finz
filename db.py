@@ -1,10 +1,11 @@
+#!/usr/bin/python3
+#
 #       [ Database Helpers ]
 #
 # Sqlite3 python queries, served to the 
 # main script to seperate database operations
 # from frontend route logic
 
-#!/usr/bin/python3
 import datetime
 import sqlite3
 import contextlib

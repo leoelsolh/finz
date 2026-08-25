@@ -1,4 +1,12 @@
-# Test Enviornment
+#!/usr/bin/python3
+#
+#      [ Test Suite ]
+# 
+# This script is run with pytest
+# to ensure the app is functioning
+# as expected, and that there are no 
+# faults before new code is pushed.
+
 import time
 import datetime
 import pytest
