@@ -35,6 +35,9 @@ migrations = [
             damage_note TEXT
         )
     '''),
+    (2, '''
+        ALTER TABLE boards ADD COLUMN archived INTEGER DEFAULT 0;
+    ''')
 ]
 
 def run_migrations():

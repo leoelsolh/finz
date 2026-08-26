@@ -846,6 +846,49 @@ legend {
 	margin: 0 0 0.9rem;
 }
 
+/* Sub-heading dividing a panel's sections, e.g. stock list under its form */
+.stock-heading {
+	font-size: 1rem;
+	letter-spacing: 0.02em;
+	margin: 1.3rem 0 0.9rem;
+	padding-top: 1.1rem;
+	border-top: 1px solid var(--navy-line);
+}
+
+/* Compact inline row to set a board's stock level, one per stock card */
+.stock-adjust {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.7rem;
+	margin-top: 0.8rem;
+}
+
+.stock-adjust label {
+	margin: 0;
+	font-size: 1rem;
+}
+
+.stock-adjust input {
+	width: 4.5rem;
+	text-align: center;
+}
+
+/* Quiet, reversible remove: a low-key text button, not a loud danger block */
+.stock-remove {
+	margin-top: 0.6rem;
+}
+
+.btn-link-remove {
+	border: 0;
+	background: none;
+	padding: 0.2rem 0;
+	font: inherit;
+	color: var(--brick);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 /* Cards sit on the panel tint, so drop the trailing gap on the last one */
 .panel .card:last-child {
 	margin-bottom: 0;

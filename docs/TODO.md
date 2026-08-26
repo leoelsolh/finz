@@ -5,7 +5,6 @@
 
 #### [ Next ] 
 - [ ] Multi-user accounts
-- [ ] Stock management: add/remove boards
 - [ ] Wetsuits and body boards as separate hire items (£15/£10)
 - [ ] LICENSE file
 - [ ] Add footer social links. Currently; href="#" (dead).

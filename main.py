@@ -171,6 +171,60 @@ def admin_out():
     db.mark_board_out(board_id, renter_name)
     return redirect(url_for('admin'))
 
+@app.route('/admin/stock/add', methods=['POST'])
+def admin_add_stock():
+    name = request.form.get('name')
+    size = request.form.get('size')
+    price = request.form.get('price')
+    quantity = request.form.get('quantity')
+    if not name or not size or not price or not quantity:
+        flash('Please enter all fields')
+        return redirect(url_for('admin'))
+
+    try:
+        price = int(price)
+        quantity = int(quantity)
+        db.add_new_board(name, size, price, quantity)
+
+    except ValueError:
+        flash('Please enter a valid Integer Number.')
+        return redirect(url_for('admin'))
+
+    return redirect(url_for('admin'))
+
+@app.route('/admin/stock/archive', methods=['POST'])
+def admin_archive_stock():
+    board_id = request.form.get('board_id')
+    if not board_id:
+        flash('Please enter all fields')
+        return redirect(url_for('admin'))
+    
+    db.archive_board(board_id)
+    return redirect(url_for('admin'))
+
+@app.route('/admin/stock/quantity', methods=['POST'])
+def admin_stock_quantity():
+    board_id = request.form.get('board_id')
+    quantity = request.form.get('quantity')
+
+    if not board_id or not quantity:
+        flash('Please enter all fields')
+        return redirect(url_for('admin'))
+
+    if quantity < 0:
+        flash('Stock cant go negative...')
+        return redirect(url_for('admin'))
+
+    try: 
+        quantity = int(quantity)
+        db.set_board_quantity(quantity, board_id)
+
+    except ValueError:
+        flash('Please make sure the quantity is a valid number. For example "2", not "Two".')
+        return redirect(url_for('admin'))
+    
+    return redirect(url_for('admin'))
+
 @app.route('/admin/repair', methods=['POST'])
 def admin_repair():
     board_id = request.form.get('board_id')

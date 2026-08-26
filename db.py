@@ -32,7 +32,11 @@ def get_board_sizes():
         with get_connection() as connection:
             cursor = connection.cursor()
 
-            cursor.execute('''SELECT DISTINCT size FROM boards''')
+            cursor.execute('''
+                SELECT DISTINCT size 
+                FROM boards
+                WHERE archived = 0
+            ''')
             return cursor.fetchall()
 
     except sqlite3.OperationalError as op_error:
@@ -67,7 +71,7 @@ def get_available_boards():
                             WHERE rentals.board_id = boards.id
                             AND came_back IS NULL
                         ) AS available
-                    FROM boards
+                    FROM boards WHERE archived = 0
                 ) WHERE available > 0
             ''')
             return cursor.fetchall()
@@ -77,6 +81,22 @@ def get_available_boards():
         raise DatabaseError('Could not fetch available boards') from sql_error
 
 # Admin logic
+def add_new_board(name, size, price, quantity):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                INSERT INTO boards (name, size, price, quantity)
+                VALUES (?, ?, ?, ?)
+            ''', (name, size, price, quantity))
+
+            connection.commit()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to add new board')
+        raise DatabaseError('Could not add new board.') from sql_error
+
 def mark_board_out(board_id, renter_name):
     try:
         with get_connection() as connection:
@@ -145,6 +165,23 @@ def mark_board_in(rental_id, damaged=0, damage_note=None):
         logging.exception('Failed to mark board in')
         raise DatabaseError('Could not mark board in.') from sql_error
 
+def get_all_boards():
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                SELECT id, name, size, price, quantity
+                FROM boards
+                WHERE archived = 0
+                ORDER BY name
+            ''')
+            return cursor.fetchall()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to get all boards')
+        raise DatabaseError('Could not fetch all boards.') from sql_error
+
 def get_damaged_boards():
     try:
         with get_connection() as connection:
@@ -178,6 +215,40 @@ def clear_damage_from_board(board_id):
     except sqlite3.Error as sql_error:
         logging.exception('Failed to clear damage-marker from board.')
         raise DatabaseError('Could not clear damage-marker from board.') from sql_error
+
+def archive_board(board_id):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                UPDATE boards
+                SET archived = 1
+                WHERE id = ?
+            ''', (board_id,))
+
+            connection.commit()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to archive board')
+        raise DatabaseError('Could not archive this board.') from sql_error
+
+def set_board_quantity(quantity, board_id):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            cursor.execute('''
+                UPDATE boards 
+                SET quantity = ?
+                WHERE id = ?
+            ''', (quantity, board_id))
+
+            connection.commit()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to set board quantity')
+        raise DatabaseError('Could not update board quantity') from sql_error
 
 def get_active_rentals(search=None):
     try:
