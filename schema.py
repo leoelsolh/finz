@@ -37,6 +37,16 @@ migrations = [
     '''),
     (2, '''
         ALTER TABLE boards ADD COLUMN archived INTEGER DEFAULT 0;
+    '''),
+    (3, '''
+        ALTER TABLE boards ADD COLUMN category TEXT DEFAULT 'surfboard';
+    '''),
+    (4, '''
+        ALTER TABLE rentals ADD COLUMN hire_group TEXT;
+    '''),
+    (5, '''
+        ALTER TABLE bookings ADD COLUMN board_qty INTEGER DEFAULT 1;
+        ALTER TABLE bookings ADD COLUMN fulfilled INTEGER DEFAULT 0;
     ''')
 ]
 
