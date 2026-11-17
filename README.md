@@ -2,7 +2,7 @@
 ### [ Surf Rental App / made with flask ] 
 [ Currently in Active Development ]
 
-![CI](https://github.com/leoelsolh/fins-surf-rental/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.13-blue) ![Status](https://img.shields.io/badge/status-in%20development-orange)
+![CI](https://github.com/leoelsolh/finz/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.13-blue) ![Status](https://img.shields.io/badge/status-in%20development-orange)
 
  A booking and rental tracking site for a surfboard hire shop on the Gower peninsula in Wales.
 
