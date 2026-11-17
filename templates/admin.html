@@ -1,189 +1,149 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
 
 {% block title %}Counter · Finz Surf Hire{% endblock %}
 
-{% block header %}
-	<header class="topbar">
-		<a class="brand" href="/admin">Finz <span>Counter</span></a>
-		<form method="post" action="/admin/logout">
-			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-			<button type="submit" class="btn btn-quiet">Log out</button>
-		</form>
-	</header>
-{% endblock %}
+{% block admin_content %}
+	<section class="status-bar" aria-label="Today at a glance">
+		<p class="status-counts">
+			<strong>{{ out_total }}</strong> out ·
+			<strong>{{ board_stock|sum(attribute='available') }}</strong> available ·
+			<strong>{{ bookings|length }}</strong> booked today
+		</p>
+	</section>
 
-{% block body %}
-	<main>
-		<div class="shell shell-dash">
-			<div class="dashboard">
+	<div class="dash-cols">
 
-				<section class="status-bar" aria-label="Today at a glance">
-					<p class="status-counts">
-						<strong>{{ out_total }}</strong> out ·
-						<strong>{{ board_stock|sum(attribute='available') }}</strong> in the racks ·
-						<strong>{{ bookings|length }}</strong> booked today
-					</p>
-					{% if damaged_boards %}
-						<a class="status-flag" href="#needs-repair">{{ damaged_boards|length }} need{{ 's' if damaged_boards|length == 1 else '' }} repair</a>
-					{% endif %}
-				</section>
-
-				<div class="dash-cols">
-
-					<div class="dash-col">
-						<section class="panel">
-							<h2>Send a board out</h2>
-							{% if board_stock %}
-								<form method="post" action="/admin/out" class="form-card">
-									<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-									<label for="board-select">Which board</label>
-									<select id="board-select" name="board_id">
-										{% for board in board_stock %}
-											<option value="{{ board.id }}">{{ board.name }} · {{ board.size }} · {{ board.available }} left</option>
-										{% endfor %}
-									</select>
-									<label for="renter-name">Who is taking it</label>
-									<input id="renter-name" name="renter_name" autocomplete="off">
-									<button type="submit" class="btn">Mark out</button>
-								</form>
-							{% else %}
-								<p class="empty">Every board is out. Mark one as returned first.</p>
-							{% endif %}
-						</section>
-
-						<section class="panel">
-							<h2>Out now</h2>
-
-							<form class="search-row" method="get" action="/admin" role="search">
-								<input class="search-input" type="search" name="q" value="{{ search or '' }}" placeholder="Search by renter name" aria-label="Search boards out by renter name" autocomplete="off">
-								<button type="submit" class="btn btn-quiet">Search</button>
-								{% if search %}<a class="search-clear" href="/admin">Clear</a>{% endif %}
-							</form>
-
-							<details class="out-list"{% if search %} open{% endif %}>
-								<summary>
-									{%- if search -%}
-										Matches for &ldquo;{{ search }}&rdquo; ({{ rentals|length }})
-									{%- else -%}
-										Show boards out ({{ out_total }})
-									{%- endif -%}
-								</summary>
-								<div class="scroll-list">
-									{% for rental in rentals %}
-										<article class="card">
-											<div class="card-head">
-												<h3>{{ rental.name }} <span class="size">{{ rental.size }}</span></h3>
-												<span class="chip chip-out">Out</span>
-											</div>
-											<p>With {{ rental.name_booked }} since {{ rental.went_out | shoptime }}</p>
-											<form method="post" action="/admin/return">
-												<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-												<input type="hidden" name="rental_id" value="{{ rental.rental_id }}">
-												<div class="damage-row">
-													<input type="checkbox" id="damage-box-{{ loop.index }}" class="damage-box" name="damaged">
-													<label class="damage-check" for="damage-box-{{ loop.index }}">Noticeable damage?</label>
-													<label class="damage-note-label" for="damage-note-{{ loop.index }}">What is damaged</label>
-													<input type="text" id="damage-note-{{ loop.index }}" class="damage-note" name="damage_note" placeholder="e.g. chipped fin, left side" autocomplete="off">
-												</div>
-												<button type="submit" class="btn">Mark as returned</button>
-											</form>
-										</article>
-									{% else %}
-										{% if search %}
-											<p class="empty">No one out under that name.</p>
-										{% else %}
-											<p class="empty">Nothing out. Every board is in the rack.</p>
-										{% endif %}
-									{% endfor %}
-								</div>
-							</details>
-						</section>
-					</div>
-
-					<div class="dash-col">
-						<section class="panel">
-							<h2>Today's bookings</h2>
-							{% for booking in bookings %}
-								<article class="card">
-									<div class="card-head">
-										<h3>{{ booking.name }}</h3>
-										<span class="chip chip-sea">{{ booking.size_requested }}</span>
-									</div>
-									<p>
-										{{ "Wetsuit included" if booking.wetsuit else "No wetsuit" }} ·
-										<a href="tel:{{ booking.phone }}">{{ booking.phone }}</a>
-									</p>
-								</article>
-							{% else %}
-								<p class="empty">No bookings today.</p>
-							{% endfor %}
-						</section>
-
-						{% if damaged_boards %}
-							<section class="panel" id="needs-repair">
-								<h2>Needs repair</h2>
-								{% for board in damaged_boards %}
-									<article class="card">
-										<div class="card-head">
-											<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
-											<span class="chip chip-damage">{{ board.damage_count }} flagged</span>
-										</div>
-										<form method="post" action="/admin/repair">
-											<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-											<input type="hidden" name="board_id" value="{{ board.id }}">
-											<button type="submit" class="btn">Mark one repaired</button>
-										</form>
-									</article>
-								{% endfor %}
-							</section>
+		<div class="dash-col">
+			<section class="panel">
+				<h2>Send a hire out</h2>
+				{% set surfboards = board_stock | selectattr('category', 'equalto', 'surfboard') | list %}
+				{% set wetsuits = board_stock | selectattr('category', 'equalto', 'wetsuit') | list %}
+				{% set bodyboards = board_stock | selectattr('category', 'equalto', 'bodyboard') | list %}
+				{% if board_stock %}
+					<form method="post" action="/admin/out" class="form-card">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+						{% if request.args.get('book') %}
+							<input type="hidden" name="booking_id" value="{{ request.args.get('book') }}">
+							<p class="prefill-note">{{ request.args.get('name') }}'s booking: {{ request.args.get('boards') }} board(s), a wetsuit each. Set the quantities below.</p>
 						{% endif %}
 
-						<section class="panel">
-							<h2>Stock and admin</h2>
-							<form method="post" action="/admin/stock/add" class="form-card">
-								<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-								<label for="stock-name">Board name</label>
-								<input id="stock-name" name="name" autocomplete="off">
-								<label for="stock-size">Size</label>
-								<input id="stock-size" name="size" placeholder="e.g. 8'0, 9'0" autocomplete="off">
-								<label for="stock-price">Price per day (£)</label>
-								<input id="stock-price" name="price" type="number" inputmode="numeric" min="0" step="1">
-								<label for="stock-quantity">How many</label>
-								<input id="stock-quantity" name="quantity" type="number" inputmode="numeric" min="1" step="1">
-								<button type="submit" class="btn">Add board</button>
-							</form>
+						<label for="renter-name">Who is taking it</label>
+						<input id="renter-name" name="renter_name" autocomplete="off" value="{{ request.args.get('name', '') }}">
 
-							<h3 class="stock-heading">Current stock</h3>
-							{% for board in all_boards %}
-								<article class="card">
-									<div class="card-head">
-										<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
-										<span class="chip chip-sea">{{ board.quantity }} in stock</span>
-									</div>
-									<p>£{{ board.price }} per day</p>
-									<form method="post" action="/admin/stock/quantity" class="stock-adjust">
-										<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-										<input type="hidden" name="board_id" value="{{ board.id }}">
-										<label for="qty-{{ board.id }}">Set quantity</label>
-										<input id="qty-{{ board.id }}" name="quantity" type="number" inputmode="numeric" min="0" step="1" value="{{ board.quantity }}">
-										<button type="submit" class="btn btn-quiet">Update</button>
-									</form>
-									<form method="post" action="/admin/stock/archive" class="stock-remove">
-										<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-										<input type="hidden" name="board_id" value="{{ board.id }}">
-										<button type="submit" class="btn-link-remove">Remove from stock</button>
-									</form>
-								</article>
-							{% else %}
-								<p class="empty">No boards yet. Add one above.</p>
+						{% if surfboards %}
+							<h3 class="stock-heading">Boards</h3>
+							{% for board in surfboards %}
+								<div class="qty-row">
+									<label class="qty-label" for="qty-{{ board.id }}">{{ board.name }} <span class="size">{{ board.size }}</span> · {{ board.available }} left</label>
+									<input class="qty-input" id="qty-{{ board.id }}" type="number" name="qty_{{ board.id }}" inputmode="numeric" min="0" max="{{ board.available }}" step="1" value="0">
+								</div>
 							{% endfor %}
-						</section>
-					</div>
+						{% endif %}
 
+						{% if wetsuits %}
+							<h3 class="stock-heading">Wetsuits</h3>
+							{% for wetsuit in wetsuits %}
+								<div class="qty-row">
+									<label class="qty-label" for="qty-{{ wetsuit.id }}">{{ wetsuit.name }} <span class="size">{{ wetsuit.size }}</span> · {{ wetsuit.available }} left</label>
+									<input class="qty-input" id="qty-{{ wetsuit.id }}" type="number" name="qty_{{ wetsuit.id }}" inputmode="numeric" min="0" max="{{ wetsuit.available }}" step="1" value="0">
+								</div>
+							{% endfor %}
+						{% endif %}
+
+						{% if bodyboards %}
+							<h3 class="stock-heading">Body boards</h3>
+							{% for bodyboard in bodyboards %}
+								<div class="qty-row">
+									<label class="qty-label" for="qty-{{ bodyboard.id }}">{{ bodyboard.name }} <span class="size">{{ bodyboard.size }}</span> · {{ bodyboard.available }} left</label>
+									<input class="qty-input" id="qty-{{ bodyboard.id }}" type="number" name="qty_{{ bodyboard.id }}" inputmode="numeric" min="0" max="{{ bodyboard.available }}" step="1" value="0">
+								</div>
+							{% endfor %}
+						{% endif %}
+
+						<button type="submit" class="btn">Mark out</button>
+					</form>
+				{% else %}
+					<p class="empty">Everything is out. Mark a hire as returned first.</p>
+				{% endif %}
+			</section>
+
+			<section class="panel">
+				<h2>Out now</h2>
+
+				<form class="search-row" method="get" action="/admin" role="search">
+					<input class="search-input" type="search" name="q" value="{{ search or '' }}" placeholder="Search by renter name" aria-label="Search hires out by renter name" autocomplete="off">
+					<button type="submit" class="btn btn-quiet">Search</button>
+					{% if search %}<a class="search-clear" href="/admin">Clear</a>{% endif %}
+				</form>
+
+				<div class="scroll-list">
+					{% for hire_group, items in rentals | groupby('hire_group') %}
+						{% set first = items | first %}
+						<article class="card hire-card">
+							<div class="card-head">
+								<h3>{{ first.name_booked }}</h3>
+								<span class="chip chip-out">Out since {{ first.went_out | shoptime }}</span>
+							</div>
+							<form method="post" action="/admin/return">
+								<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+								<ul class="hire-items">
+									{% for item in items %}
+										<li class="hire-item">
+											<input type="hidden" name="rental_id" value="{{ item.rental_id }}">
+											<span class="hire-item-name">{{ item.name }} <span class="size">{{ item.size }}</span></span>
+											<label class="hire-damage">
+												<input type="checkbox" name="damaged" value="{{ item.rental_id }}">
+												<span>Damaged</span>
+											</label>
+										</li>
+									{% endfor %}
+								</ul>
+								<button type="submit" class="btn">Return this hire</button>
+							</form>
+						</article>
+					{% else %}
+						{% if search %}
+							<p class="empty">No one out under that name.</p>
+						{% else %}
+							<p class="empty">Nothing out. Every board is in the rack.</p>
+						{% endif %}
+					{% endfor %}
 				</div>
-			</div>
+			</section>
 		</div>
-	</main>
-{% endblock %}
 
-{% block footer %}{% endblock %}
+		<div class="dash-col">
+			<section class="panel">
+				<h2>Today's bookings</h2>
+				{% for booking in bookings %}
+					<article class="card">
+						<div class="card-head">
+							<h3>{{ booking.name }}</h3>
+							<a class="booking-phone" href="tel:{{ booking.phone }}">{{ booking.phone }}</a>
+						</div>
+						<ul class="kit-list">
+							<li>{{ booking.board_qty }} board{{ 's' if booking.board_qty != 1 else '' }}</li>
+							<li>{{ booking.board_qty }} wetsuit{{ 's' if booking.board_qty != 1 else '' }}</li>
+						</ul>
+						<div class="booking-actions">
+							<a class="btn btn-quiet" href="{{ url_for('admin', book=booking.id, name=booking.name, boards=booking.board_qty) }}">Mark out</a>
+							<details class="booking-edit">
+								<summary>Edit</summary>
+								<form method="post" action="/admin/booking/edit" class="stock-adjust">
+									<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+									<input type="hidden" name="booking_id" value="{{ booking.id }}">
+									<label for="bk-qty-{{ booking.id }}">Boards</label>
+									<input id="bk-qty-{{ booking.id }}" name="board_qty" type="number" inputmode="numeric" min="1" step="1" value="{{ booking.board_qty }}">
+									<button type="submit" class="btn btn-quiet">Save</button>
+								</form>
+							</details>
+						</div>
+					</article>
+				{% else %}
+					<p class="empty">No bookings today.</p>
+				{% endfor %}
+			</section>
+		</div>
+
+	</div>
+{% endblock %}

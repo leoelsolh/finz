@@ -1107,3 +1107,343 @@ address {
 	white-space: nowrap;
 	border: 0;
 }
+
+/* ============================================================
+   Admin dashboard: shared nav, grouped hire cards, analytics
+   ============================================================ */
+
+/* Layout: content with a nav that is a bottom pill on mobile,
+   a side rail on desktop. */
+.admin-layout {
+	max-width: 60rem;
+	margin-inline: auto;
+	padding: 0 1rem 6.5rem;
+}
+
+.admin-main {
+	margin-top: 1.4rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.admin-nav {
+	position: fixed;
+	left: 50%;
+	bottom: 1rem;
+	transform: translateX(-50%);
+	z-index: 30;
+	display: flex;
+	gap: 0.2rem;
+	background: var(--navy);
+	padding: 0.35rem;
+	border-radius: 999px;
+	box-shadow: 0 8px 24px rgba(26, 58, 122, 0.28);
+}
+
+.admin-nav-link {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.15rem;
+	min-width: 4.6rem;
+	padding: 0.45rem 0.7rem;
+	border-radius: 999px;
+	font-size: 0.82rem;
+	color: var(--cream);
+	text-decoration: none;
+}
+
+.admin-nav-link svg {
+	width: 22px;
+	height: 22px;
+}
+
+.admin-nav-link.is-active {
+	background: var(--cream);
+	color: var(--navy);
+}
+
+@media (min-width: 48rem) {
+	.admin-layout {
+		display: flex;
+		align-items: flex-start;
+		gap: 1.5rem;
+		padding-bottom: 2rem;
+	}
+	.admin-nav {
+		position: sticky;
+		top: 1.5rem;
+		left: auto;
+		bottom: auto;
+		transform: none;
+		flex-direction: column;
+		gap: 0.25rem;
+		margin-top: 1.4rem;
+		padding: 0.5rem;
+		border-radius: var(--radius);
+		box-shadow: none;
+		flex: 0 0 auto;
+	}
+	.admin-nav-link {
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: 0.7rem;
+		min-width: 10.5rem;
+		padding: 0.65rem 1.1rem;
+		font-size: 1.1rem;
+	}
+	.admin-main {
+		flex: 1;
+		min-width: 0;
+		margin-top: 1.4rem;
+	}
+}
+
+/* Grouped hire card: one card per hire, its items listed with a
+   damage tick each, a single return button for the whole lot. */
+.hire-items {
+	list-style: none;
+	margin: 0 0 1rem;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.hire-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.8rem;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid var(--navy-line);
+}
+
+.hire-item:last-child {
+	border-bottom: 0;
+}
+
+.hire-item-name {
+	font-size: 1.1rem;
+}
+
+.hire-damage {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0;
+	font-size: 0.95rem;
+	color: var(--navy-soft);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.hire-damage input {
+	width: 1.15rem;
+	height: 1.15rem;
+	accent-color: var(--brick);
+	cursor: pointer;
+}
+
+/* Today's bookings kit list */
+.kit-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.8rem;
+	font-size: 1.05rem;
+}
+
+.booking-phone {
+	font-size: 1.05rem;
+	color: var(--navy-soft);
+	text-decoration: none;
+}
+
+/* Analytics */
+.analytics-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.8rem;
+}
+
+.analytics-head h2 {
+	margin: 0;
+}
+
+.period-toggle {
+	display: inline-flex;
+	gap: 0.3rem;
+	background: var(--cream);
+	padding: 0.25rem;
+	border-radius: 999px;
+}
+
+.period-btn {
+	padding: 0.35rem 0.9rem;
+	border-radius: 999px;
+	font-size: 1rem;
+	color: var(--navy);
+	text-decoration: none;
+}
+
+.period-btn.is-active {
+	background: var(--navy);
+	color: var(--cream);
+}
+
+.analytics-note {
+	font-size: 0.95rem;
+	color: var(--navy-soft);
+	margin: 0.9rem 0 1.2rem;
+}
+
+.stat-tiles {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.8rem;
+}
+
+.stat-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	background: var(--cream);
+	border-radius: var(--radius);
+	padding: 1.1rem 1.2rem;
+}
+
+.stat-value {
+	font-family: var(--display);
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--navy);
+	line-height: 1;
+}
+
+.stat-label {
+	font-size: 0.95rem;
+	color: var(--navy-soft);
+}
+
+/* Busy-days bar chart: fixed-height track so bars scale predictably */
+.chart {
+	display: flex;
+	align-items: flex-end;
+	gap: 0.4rem;
+	overflow-x: auto;
+	padding-bottom: 0.3rem;
+}
+
+.chart-col {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3rem;
+	flex: 1 0 auto;
+	min-width: 1.9rem;
+}
+
+.chart-count {
+	font-size: 0.82rem;
+	color: var(--navy-soft);
+}
+
+.chart-track {
+	height: 150px;
+	display: flex;
+	align-items: flex-end;
+}
+
+.chart-bar {
+	width: 1.6rem;
+	min-height: 3px;
+	background: var(--navy);
+	border-radius: 6px 6px 0 0;
+}
+
+.chart-day {
+	font-size: 0.75rem;
+	color: var(--navy-soft);
+	white-space: nowrap;
+}
+
+/* ---- Quantity-aware send-out, booking actions, design fixes ---- */
+
+/* Design fix 1: bolder, more legible admin headings */
+.panel h2 {
+	font-weight: 800;
+}
+
+.admin-main h3 {
+	font-weight: 700;
+}
+
+/* Design fix 2: stop the submit button hugging the last input's underline */
+.form-card .btn {
+	margin-top: 1.4rem;
+}
+
+/* Send-out: one quantity box per available item */
+.qty-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.8rem;
+	padding: 0.45rem 0;
+	border-bottom: 1px solid var(--navy-line);
+}
+
+.qty-row:last-of-type {
+	border-bottom: 0;
+}
+
+.qty-label {
+	margin: 0;
+	font-size: 1.05rem;
+}
+
+.qty-input {
+	width: 4rem;
+	text-align: center;
+}
+
+.prefill-note {
+	background: var(--cream);
+	border-radius: var(--radius);
+	padding: 0.7rem 0.9rem;
+	margin: 0 0 0.3rem;
+	font-size: 1rem;
+}
+
+/* Today's bookings: mark-out and edit actions */
+.booking-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	margin-top: 0.9rem;
+}
+
+.booking-edit summary {
+	cursor: pointer;
+	color: var(--navy-soft);
+	font-size: 1rem;
+	padding: 0.2rem 0.4rem;
+}
+
+.booking-edit[open] summary {
+	margin-bottom: 0.4rem;
+}
+
+/* Public booking form: wetsuit-included note */
+.hire-note {
+	font-size: 1rem;
+	color: var(--navy-soft);
+	margin: 1.4rem 0 0;
+}

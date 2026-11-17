@@ -45,24 +45,13 @@
 					<fieldset class="zone">
 						<legend>The hire</legend>
 						<div class="form-card">
-							<label for="booking-size">Board size *</label>
-							<select id="booking-size" name="size_requested" required>
-								<option value="" disabled selected>Choose a size</option>
-								{% for row in sizes %}
-									<option value="{{ row.size }}">{{ row.size }}</option>
-								{% endfor %}
-							</select>
+							<label for="booking-boards">How many boards *</label>
+							<input id="booking-boards" type="number" name="board_qty" inputmode="numeric" min="1" step="1" value="1" required>
 
 							<label for="booking-date">Which day *</label>
 							<input id="booking-date" type="date" name="hire_date"{% if today %} min="{{ today }}"{% endif %} required>
 
-							<label class="wetsuit-choice">
-								<input type="checkbox" name="wetsuit">
-								<span>
-									<strong>Add a wetsuit</strong>
-									<small>£10 more for the day</small>
-								</span>
-							</label>
+							<p class="hire-note">Wetsuits can be hired on site. Board and wetsuit sizes are fitted for you at the shop.</p>
 						</div>
 					</fieldset>
 				</div>

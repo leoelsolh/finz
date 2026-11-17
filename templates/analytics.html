@@ -1,0 +1,47 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Analytics · Finz Surf Hire{% endblock %}
+
+{% block admin_content %}
+	<section class="panel">
+		<div class="analytics-head">
+			<h2>Analytics</h2>
+			<div class="period-toggle" role="group" aria-label="Time period">
+				<a href="/admin/analytics?period=1W" class="period-btn{% if period == '1W' %} is-active{% endif %}">1W</a>
+				<a href="/admin/analytics?period=1M" class="period-btn{% if period == '1M' %} is-active{% endif %}">1M</a>
+				<a href="/admin/analytics?period=1Y" class="period-btn{% if period == '1Y' %} is-active{% endif %}">1Y</a>
+			</div>
+		</div>
+
+		<p class="analytics-note">Income is an estimate, based on each hire at its item's current daily price.</p>
+
+		<div class="stat-tiles">
+			<div class="stat-tile">
+				<span class="stat-value">£{{ income }}</span>
+				<span class="stat-label">Estimated income</span>
+			</div>
+			<div class="stat-tile">
+				<span class="stat-value">{{ bookings_count }}</span>
+				<span class="stat-label">Bookings</span>
+			</div>
+		</div>
+
+		<h3 class="stock-heading">Busy days</h3>
+		{% if hires_per_day %}
+			{% set max = hires_per_day | map(attribute='hires') | max %}
+			<div class="chart" role="img" aria-label="Hires per day over the selected period">
+				{% for row in hires_per_day %}
+					<div class="chart-col">
+						<span class="chart-count">{{ row.hires }}</span>
+						<div class="chart-track">
+							<div class="chart-bar" style="height: {{ (row.hires / max * 100) | round | int }}%"></div>
+						</div>
+						<span class="chart-day">{{ row.day[8:10] }}/{{ row.day[5:7] }}</span>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="empty">No hires in this period yet.</p>
+		{% endif %}
+	</section>
+{% endblock %}

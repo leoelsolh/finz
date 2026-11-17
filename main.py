@@ -100,14 +100,12 @@ def not_found(error):
 @app.route('/admin')
 def admin():
     search = request.args.get('q')
-
     out_total = len(db.get_active_rentals())
     rentals = db.get_active_rentals(search)
     board_stock = db.get_available_boards()
     bookings = db.get_todays_bookings()
-    damaged_boards = db.get_damaged_boards()
 
-    return render_template('admin.html', out_total=out_total, rentals=rentals, search=search, board_stock=board_stock, bookings=bookings, damaged_boards=damaged_boards)
+    return render_template('admin.html', out_total=out_total, rentals=rentals, search=search, board_stock=board_stock, bookings=bookings)
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -149,27 +147,71 @@ def admin_logout():
 
 @app.route('/admin/return', methods=['POST'])
 def admin_return():
-    marked_board = request.form.get('rental_id')
-    damaged = 1 if request.form.get('damaged') else 0
-    damage_note = request.form.get('damage_note')
+    rental_ids = request.form.getlist('rental_id')
+    damaged_ids = request.form.getlist('damaged')
 
-    if not marked_board:
-        flash('A board must be selected')
+    if not rental_ids:
+        flash('Nothing to return')
         return redirect(url_for('admin'))
 
-    db.mark_board_in(marked_board, damaged, damage_note)
+    for rental_id in rental_ids:
+        if rental_id in damaged_ids:
+            damaged = 1
+        else:
+            damaged = 0
+        db.mark_board_in(rental_id, damaged)
+        
     return redirect(url_for('admin'))
 
 @app.route('/admin/out', methods=['POST'])
 def admin_out():
-    board_id = request.form.get('board_id')
+    item_ids = []
+    for row in db.get_available_boards():
+        raw = request.form.get(f'qty_{str(row['id'])}')
+        qty = int(raw) if raw else 0
+        item_ids += [row['id']] * qty 
+
     renter_name = request.form.get('renter_name')
-    if not board_id or not renter_name:
+    booking_id = request.form.get('booking_id')
+
+    if not renter_name or not item_ids:
+        flash('Please enter all required fields')
+        return redirect(url_for('admin'))
+    
+    db.mark_hire_out(item_ids, renter_name)
+
+    if booking_id:
+        db.mark_booking_fulfilled(booking_id)
+    
+    return redirect(url_for('admin'))
+
+@app.route('/admin/booking/edit', methods=['POST'])
+def admin_edit_booking():
+    booking_id = request.form.get('booking_id')
+    board_qty = request.form.get('board_qty')
+
+    if not booking_id or not board_qty:
         flash('Please enter all fields')
         return redirect(url_for('admin'))
+    try:
+        board_amount = int(board_qty)
+        
+        if board_amount < 1:
+            flash('Board quantity cant be negative')
+            return redirect(url_for('admin'))
 
-    db.mark_board_out(board_id, renter_name)
+    except ValueError:
+        flash('Please enter a valid integer for board quantity. For example, "5" not "Five"')
+        return redirect(url_for('admin'))
+
+    db.update_booking(booking_id, board_amount)
     return redirect(url_for('admin'))
+
+@app.route('/admin/stock')
+def admin_stock():
+    all_boards = db.get_all_boards()
+    damaged_boards = db.get_damaged_boards()
+    return render_template('stock.html', all_boards=all_boards, damaged_boards=damaged_boards)
 
 @app.route('/admin/stock/add', methods=['POST'])
 def admin_add_stock():
@@ -177,14 +219,19 @@ def admin_add_stock():
     size = request.form.get('size')
     price = request.form.get('price')
     quantity = request.form.get('quantity')
-    if not name or not size or not price or not quantity:
+    category = request.form.get('category')
+    if not name or not size or not price or not quantity or not category:
         flash('Please enter all fields')
+        return redirect(url_for('admin'))
+
+    if category not in ('surfboard', 'wetsuit', 'bodyboard'):
+        flash('Invalid category.')
         return redirect(url_for('admin'))
 
     try:
         price = int(price)
         quantity = int(quantity)
-        db.add_new_board(name, size, price, quantity)
+        db.add_new_board(name, size, price, quantity, category)
 
     except ValueError:
         flash('Please enter a valid Integer Number.')
@@ -211,6 +258,7 @@ def admin_stock_quantity():
         flash('Please enter all fields')
         return redirect(url_for('admin'))
 
+    quantity = int(quantity)
     if quantity < 0:
         flash('Stock cant go negative...')
         return redirect(url_for('admin'))
@@ -235,6 +283,21 @@ def admin_repair():
     db.clear_damage_from_board(board_id)
     return redirect(url_for('admin'))
 
+@app.route('/admin/analytics')
+def admin_analytics():
+    period = request.args.get('period')
+    periods = {'1W': 7, '1M': 30, '1Y': 365}
+    if period not in periods:
+        period = '1W'
+    
+    days = periods[period]
+    cutoff = (datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)) - datetime.timedelta(days=days)).strftime('%Y-%m-%d')
+
+    income = db.get_income_since(cutoff)
+    bookings_count = db.get_bookings_count_since(cutoff)
+    hires_per_day = db.get_hires_per_day_since(cutoff)
+    return render_template('analytics.html', period=period, income=income, bookings_count=bookings_count, hires_per_day=hires_per_day)
+
 # User-facing pages
 @app.route('/')
 def index():
@@ -251,12 +314,18 @@ def booking():
         booking_name = request.form.get('name')
         booking_number = request.form.get('phone')
         booking_email = request.form.get('email')
-        booking_size = request.form.get('size_requested')
-        booking_wetsuit = 1 if request.form.get('wetsuit') else 0
         booking_date = request.form.get('hire_date')
+        board_qty = request.form.get('board_qty')
+
+        try: 
+            board_qty = int(board_qty)
+            if board_qty < 1:
+                return render_template('book.html', error='Quantity can not be negative')
+        except ValueError:
+            return render_template('book.html', error='Please fill in a valid quantity number, like "2", not "two"')
 
         sizes = db.get_board_sizes()
-        if not booking_name or not booking_date or not booking_size or not booking_number:
+        if not booking_name or not booking_date or not booking_number or not board_qty:
             return render_template('book.html', sizes=sizes, error='Please fill in the required fields')
 
         try:
@@ -268,10 +337,9 @@ def booking():
             return render_template('book.html', sizes=sizes, error='Hire date cannot be in the past')
 
         try:
-            db.add_booking(booking_name, booking_number, booking_email, booking_wetsuit, booking_date, booking_size)
+            db.add_booking(booking_name, booking_number, booking_email, booking_date, board_qty)
             flash('Your booking has been processed. Thank you.')
             return redirect(url_for('booking'))
-            
         except db.DatabaseError:
             return render_template('book.html', sizes=sizes, error='Something went wrong, Try again shortly'), 500
 

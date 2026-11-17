@@ -32,7 +32,6 @@ def get_board_sizes():
     try: 
         with get_connection() as connection:
             cursor = connection.cursor()
-
             cursor.execute('''
 
                 SELECT DISTINCT size 
@@ -46,19 +45,16 @@ def get_board_sizes():
         logging.exception('Failed to fetch boards by size')
         raise DatabaseError('Could not fetch boards by size') from op_error
 
-def add_booking(name, phone, email, wetsuit, hire_date, size):
+def add_booking(name, phone, email, hire_date, board_qty):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
-
             cursor.execute('''
 
-                INSERT INTO bookings (name, phone, email, wetsuit, hire_date, size_requested) VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO bookings (name, phone, email, hire_date, board_qty) VALUES (?, ?, ?, ?, ?)
             
-            ''', (name, phone, email, wetsuit, hire_date, size))
-
+            ''', (name, phone, email, hire_date, board_qty))
             connection.commit()
-
     except sqlite3.Error as error:
         logging.exception('Failed to add booking')
         raise DatabaseError('Could not save booking') from error
@@ -67,7 +63,6 @@ def get_available_boards():
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
-
             cursor.execute('''
 
                 SELECT * FROM (
@@ -92,14 +87,12 @@ def add_new_board(name, size, price, quantity, category):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
-
             cursor.execute('''
 
                 INSERT INTO boards (name, size, price, quantity, category)
                 VALUES (?, ?, ?, ?, ?)
 
             ''', (name, size, price, quantity, category))
-
             connection.commit()
 
     except sqlite3.Error as sql_error:
@@ -110,16 +103,13 @@ def mark_board_out(board_id, renter_name):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
-            
             went_out = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
 
                 INSERT INTO rentals (went_out, board_id, name_booked) VALUES (?, ?, ?)
 
             ''', (went_out, board_id, renter_name))
-            
             connection.commit()
-            
             rental_id = cursor.lastrowid
             return rental_id
 
@@ -127,11 +117,42 @@ def mark_board_out(board_id, renter_name):
         logging.exception('Failed to mark board out')
         raise DatabaseError('Could not mark board out') from sql_error
 
+def mark_booking_fulfilled(booking_id):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+            cursor.execute('''
+            
+                UPDATE bookings
+                SET fulfilled = 1
+                WHERE id = ?
+            
+            ''', (booking_id,))
+            connection.commit()
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to fulfill booking') 
+        raise DatabaseError('Could not fulfill booking.') from sql_error
+
+def update_booking(booking_id, board_qty):
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+            cursor.execute('''
+            
+                UPDATE bookings
+                SET board_qty = ?
+                WHERE id = ?
+            
+            ''', (board_qty, booking_id))
+            connection.commit()
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to update booking')
+        raise DatabaseError('Could not update booking.') from sql_error
+
 def mark_hire_out(board_ids, renter_name):
     try:
         with get_connection() as connection:
             cursor = connection.cursor()
-
             hire_group = secrets.token_hex(8) 
             went_out = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             
@@ -141,7 +162,6 @@ def mark_hire_out(board_ids, renter_name):
                     INSERT INTO rentals (went_out, board_id, name_booked, hire_group) VALUES (?, ?, ?, ?)
                 
                 ''', (went_out, board_id, renter_name, hire_group))
-
             connection.commit()
             
     except sqlite3.Error as sql_error:
@@ -330,6 +350,27 @@ def get_active_rentals(search=None):
         logging.exception('Failed to fetch active rentals')
         raise DatabaseError('Could not fetch active rentals.') from sql_error
 
+def get_todays_bookings():
+    try:
+        with get_connection() as connection:
+            cursor = connection.cursor()
+
+            today = datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)).strftime('%Y-%m-%d')
+            cursor.execute('''
+            
+                SELECT * 
+                FROM bookings 
+                WHERE hire_date = ?
+                AND fulfilled = 0
+                
+            ''', (today,))
+            return cursor.fetchall()
+
+    except sqlite3.Error as sql_error:
+        logging.exception('Failed to get todays bookings')
+        raise DatabaseError('Could not get todays bookings') from sql_error
+
+# Analytics helpers
 def get_income_since(cutoff):
     try:
         with get_connection() as connection:
@@ -385,23 +426,3 @@ def get_hires_per_day_since(cutoff):
     except sqlite3.Error as sql_error:
         logging.exception('Failed to get hires-per-day statistics')
         raise DatabaseError('Could not get hires-per-day statistics') from sql_error
-
-def get_todays_bookings():
-    try:
-        with get_connection() as connection:
-            cursor = connection.cursor()
-
-            today = datetime.datetime.now(ZoneInfo(config.SHOP_TIMEZONE)).strftime('%Y-%m-%d')
-            cursor.execute('''
-            
-                SELECT * 
-                FROM bookings 
-                WHERE hire_date = ?
-                
-            ''', (today,))
-            return cursor.fetchall()
-
-    except sqlite3.Error as sql_error:
-        logging.exception('Failed to get todays bookings')
-        raise DatabaseError('Could not get todays bookings') from sql_error
-

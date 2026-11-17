@@ -1,0 +1,81 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Stock · Finz Surf Hire{% endblock %}
+
+{% block admin_content %}
+	<div class="dash-cols">
+
+		<div class="dash-col">
+			<section class="panel">
+				<h2>Add an item</h2>
+				<form method="post" action="/admin/stock/add" class="form-card">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+					<label for="stock-category">Type</label>
+					<select id="stock-category" name="category">
+						<option value="surfboard" selected>Surfboard</option>
+						<option value="wetsuit">Wetsuit</option>
+						<option value="bodyboard">Body board</option>
+					</select>
+					<label for="stock-name">Name</label>
+					<input id="stock-name" name="name" autocomplete="off">
+					<label for="stock-size">Size</label>
+					<input id="stock-size" name="size" placeholder="e.g. 8'0, 9'0" autocomplete="off">
+					<label for="stock-price">Price per day (£)</label>
+					<input id="stock-price" name="price" type="number" inputmode="numeric" min="0" step="1">
+					<label for="stock-quantity">How many</label>
+					<input id="stock-quantity" name="quantity" type="number" inputmode="numeric" min="1" step="1">
+					<button type="submit" class="btn">Add item</button>
+				</form>
+			</section>
+
+			{% if damaged_boards %}
+				<section class="panel" id="needs-repair">
+					<h2>Needs repair</h2>
+					{% for board in damaged_boards %}
+						<article class="card">
+							<div class="card-head">
+								<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
+								<span class="chip chip-damage">{{ board.damage_count }} flagged</span>
+							</div>
+							<form method="post" action="/admin/repair">
+								<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+								<input type="hidden" name="board_id" value="{{ board.id }}">
+								<button type="submit" class="btn">Mark one repaired</button>
+							</form>
+						</article>
+					{% endfor %}
+				</section>
+			{% endif %}
+		</div>
+
+		<div class="dash-col">
+			<section class="panel">
+				<h2>Current stock</h2>
+				{% for board in all_boards %}
+					<article class="card">
+						<div class="card-head">
+							<h3>{{ board.name }} <span class="size">{{ board.size }}</span></h3>
+							<span class="chip chip-sea">{{ board.quantity }} in stock</span>
+						</div>
+						<p>£{{ board.price }} per day</p>
+						<form method="post" action="/admin/stock/quantity" class="stock-adjust">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+							<input type="hidden" name="board_id" value="{{ board.id }}">
+							<label for="qty-{{ board.id }}">Set quantity</label>
+							<input id="qty-{{ board.id }}" name="quantity" type="number" inputmode="numeric" min="0" step="1" value="{{ board.quantity }}">
+							<button type="submit" class="btn btn-quiet">Update</button>
+						</form>
+						<form method="post" action="/admin/stock/archive" class="stock-remove">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+							<input type="hidden" name="board_id" value="{{ board.id }}">
+							<button type="submit" class="btn-link-remove">Remove from stock</button>
+						</form>
+					</article>
+				{% else %}
+					<p class="empty">No items yet. Add one on the left.</p>
+				{% endfor %}
+			</section>
+		</div>
+
+	</div>
+{% endblock %}
