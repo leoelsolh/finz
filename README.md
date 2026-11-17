@@ -76,3 +76,6 @@ Tests run against a separate database defined in `conftest.py`, so they never re
 **The login route does the same work whether or not the username exists.** Both the username comparison and the password hash check run on every request, and the result is evaluated in a single combined branch. If the hash were skipped when the username was wrong, the difference in response time would tell an attacker which usernames are real.
 
 **Configuration lives in one module.** `config.py` is the only place environment variables are read, and everything else imports from it. That single source of truth is what allows the test suite to point the whole application at a throwaway database, rather than tests writing into the same file the shop's data would live in.
+
+### [ License ]
+All rights reserved. Shared for portfolio purposes; contact me for use.
